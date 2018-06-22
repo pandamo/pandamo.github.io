@@ -6,22 +6,51 @@
   <title>convert</title>
   <script src='//cdn.bootcss.com/axios/0.18.0/axios.min.js'></script>
   <script src='//cdn.bootcss.com/vue/2.5.16/vue.min.js'></script>
+  <style>
+    textarea{width: 100%;height: 300px}
+  </style>
 </head>
 
 <body>
   <div id="convert">  
-  	{{sondList}}
+  加载状态：{{loaded}}
+  <textarea>{{sondList}}</textarea>
+
   </div>
   <script>
  new Vue({
     el: '#convert',
     data() {
     	return {
-      		sondList:[]
+      		sondList:[],
+          api: 'https://bird.ioliu.cn/netease/playlist?id=',
+          songListId:53208352,
+          loaded:'加载中'
     	}
     },
-    mounted(){      
-        axios.get('music163.src.json').then((data)=>{
+    computed:{
+      loadState(){
+        return this.loaded===true?'加载完成':''
+      }
+    },
+    methods:{
+      getProxyApi(){
+        axios.get(this.api + this.songListId, { timeout: 8000 }).then((resp) => {
+        this.sondList = resp.data.playlist.tracks.map((v, i) => {
+            const { id, name, al, dt, ar } = v //al专辑信息，dt歌曲时长,ar作者
+            let _ar = ar.map((p) => { return { name: p.name } })
+            this.loaded=true
+            return { id: id, name: name, cover: al.picUrl, length: dt, artist: _ar, album: al.name }          
+          })          
+        }).catch((error) => {
+          //bird.ioliu.cn的接口挂了.....调用静态接口
+          alert('接口挂了...')
+        })
+      }
+    },
+    mounted(){    
+    this.getProxyApi()  
+       /* axios.get('music163.src.json').then((data)=>{
           let _sl = data.data.playlist.tracks.map((v) => {
             const { id, name, al, dt ,ar} = v //al专辑信息，dt歌曲时长,ar作者
             let _ar=ar.map((p)=>{return {name:p.name}})
@@ -29,7 +58,7 @@
             return { id: id, name: name, cover: al.picUrl, length: dt, artist:_ar , album:al.name }
           })
           this.$set(this,'sondList',_sl)
-        })      
+        })      */
     }
   })
   </script>
