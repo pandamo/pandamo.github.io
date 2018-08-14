@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -7,60 +8,108 @@
   <script src='//cdn.bootcss.com/axios/0.18.0/axios.min.js'></script>
   <script src='//cdn.bootcss.com/vue/2.5.16/vue.min.js'></script>
   <style>
-    textarea{width: 100%;height: 300px}
+    textarea {
+      height: 1px;width: 1px;opacity: 0;
+    }
+
+    .code {
+      margin: 10px;
+      border: 1px solid #999;
+      padding: 10px;
+      font-size: 11px;
+      max-height: 300px;overflow: auto;
+    }
+
   </style>
 </head>
 
 <body>
-  <div id="convert">  
-  加载状态：{{loaded}}
-  <textarea>{{sondList}}</textarea>
-
+  <div id="convert">
+      (点击代码复制)
+    <hr>
+    调用bird.ioliu.cn 接口,调用状态：{{loaded}}
+    <div class='code' id='apilData' @click='copy(sondList)'>{{sondList}}</div>
+    本地数据优化后：
+    <div class='code' id='localData' @click='copy(sondListLocal)'>{{sondListLocal}}</div>
+    <textarea type="text" id='temp'></textarea>
   </div>
   <script>
- new Vue({
-    el: '#convert',
-    data() {
-    	return {
-      		sondList:[],
+     new Vue({
+      el: '#convert',
+      data() {
+        return {
+          sondList: null,
+          sondListLocal: null,
           api: 'https://bird.ioliu.cn/netease/playlist?id=',
-          songListId:53208352,
-          loaded:'加载中'
-    	}
-    },
-    computed:{
-      loadState(){
-        return this.loaded===true?'加载完成':''
-      }
-    },
-    methods:{
-      getProxyApi(){
-        axios.get(this.api + this.songListId, { timeout: 8000 }).then((resp) => {
-        this.sondList = resp.data.playlist.tracks.map((v, i) => {
-            const { id, name, al, dt, ar } = v //al专辑信息，dt歌曲时长,ar作者
-            let _ar = ar.map((p) => { return { name: p.name } })
-            this.loaded=true
-            return { id: id, name: name, cover: al.picUrl, length: dt, artist: _ar, album: al.name }          
-          })          
-        }).catch((error) => {
-          //bird.ioliu.cn的接口挂了.....调用静态接口
-          alert('接口挂了...')
-        })
-      }
-    },
-    mounted(){    
-    this.getProxyApi()  
-       /* axios.get('music163.src.json').then((data)=>{
-          let _sl = data.data.playlist.tracks.map((v) => {
-            const { id, name, al, dt ,ar} = v //al专辑信息，dt歌曲时长,ar作者
-            let _ar=ar.map((p)=>{return {name:p.name}})
-            console.log(name,_ar)
-            return { id: id, name: name, cover: al.picUrl, length: dt, artist:_ar , album:al.name }
+          songListId: 53208352,
+          loaded: '加载中'
+        }
+      },
+      computed: {
+        loadState() {
+          return this.loaded === true ? '加载完成' : ''
+        }
+      },
+      methods: {
+        copy(text) {
+          console.log(text);
+          
+          var input = document.getElementById('temp'); // 获取隐藏input的dom
+          input.value = text; // 修改文本框的内容
+          input.select(); // 选中文本
+          document.execCommand("copy"); // 执行浏览器复制命令
+          alert("复制成功");
+        },
+        formatList(list) {
+          let _list = list.map((v, i) => {
+            const {
+              id,
+              name,
+              al,
+              dt,
+              ar
+            } = v //al专辑信息，dt歌曲时长,ar作者
+            let _ar = ar.map((p) => {
+              return {
+                name: p.name
+              }
+            })           
+            return {
+              id: id,
+              name: name,
+              cover: al.picUrl,
+              length: dt,
+              artist: _ar,
+              album: al.name
+            }
           })
-          this.$set(this,'sondList',_sl)
-        })      */
-    }
-  })
+          return _list
+
+        },
+        getProxyApi() {
+          axios.get(this.api + this.songListId, {
+            timeout: 5000
+          }).then((resp) => {
+            this.loaded = '完毕'
+            this.sondList = JSON.stringify(this.formatList(resp.data.playlist.tracks))
+          }).catch((error) => {
+            //bird.ioliu.cn的接口挂了.....调用静态接口
+            alert('接口挂了...')
+          })
+        },
+        getLocalList() {
+          //打开 https://music.163.com/#/my/m/music/playlist?id=53208352 获取数据然后写入music163.src.json
+          axios.get('music163.src.json').then((data) => {
+            this.sondListLocal = JSON.stringify(this.formatList(data.data.playlist.tracks))
+          })
+        }
+      },
+      mounted() {
+        this.getProxyApi()
+        this.getLocalList()
+      }
+    })
+
   </script>
 </body>
 
