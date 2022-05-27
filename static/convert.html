@@ -25,12 +25,10 @@
 
 <body>
   <div id="convert">
-      (点击代码复制)
-    <hr>
-    调用bird.ioliu.cn 接口,调用状态：{{loaded}}
-    <div class='code' id='apilData' @click='copy(sondList)'>{{sondList}}</div>
-    本地数据优化后：
-    <div class='code' id='localData' @click='copy(sondListLocal)'>{{sondListLocal}}</div>
+     
+    调用接口状态：{{loaded}}
+    <div class='code' id='apilData'>{{sondList}}</div>
+    <button  @click='copy(sondList)'>copy</button>
     <textarea type="text" id='temp'></textarea>
   </div>
   <script>
@@ -39,8 +37,9 @@
       data() {
         return {
           sondList: null,
-          sondListLocal: null,
-          api: 'https://bird.ioliu.cn/netease/playlist?id=',
+          //sondListLocal: null,
+          //api: 'https://bird.ioliu.cn/netease/playlist?id=',
+          api: 'https://netease-cloud-music-api-alpha-puce.vercel.app/playlist/track/all?id=',
           songListId: 53208352,
           loaded: '加载中'
         }
@@ -88,13 +87,10 @@
         },
         getProxyApi() {
           axios.get(this.api + this.songListId, {
-            timeout: 5000
+            timeout: 15000
           }).then((resp) => {
             this.loaded = '完毕'
-            this.sondList = JSON.stringify(this.formatList(resp.data.playlist.tracks))
-          }).catch((error) => {
-            //bird.ioliu.cn的接口挂了.....调用静态接口
-            alert('接口挂了...')
+            this.sondList = JSON.stringify(this.formatList(resp.data.songs))
           })
         },
         getLocalList() {
@@ -106,7 +102,7 @@
       },
       mounted() {
         this.getProxyApi()
-        this.getLocalList()
+        //this.getLocalList()
       }
     })
 
