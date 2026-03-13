@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>硬币合并小游戏</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="game-container">
+      <div id="status-bar">
+        <div>
+          当前最高数字
+          <div id="max-value">1</div>
+        </div>
+        <div>
+          最高纪录：
+          <span id="max-record"> 1 </span>
+        </div>
+      </div>
+      <!-- <div>
+        <textarea
+          name=""
+          id="state"
+          rows="5"
+          style="display: block; width: 100%"
+        ></textarea>
+      </div> -->
+      <div id="bottle-grid">
+        <!-- 瓶子将通过 JS 动态生成 -->
+      </div>
+
+      <div id="controls">
+        <button id="undo-btn">撤回</button>
+        <button id="deal-btn">发放</button>
+        <button id="reset-btn">重新开始</button>
+        <!-- <button id="showState">获取进度</button>
+        <button id="readRecord">恢复进度</button> -->
+      </div>
+    </div>
+    <script src="game.js"></script>
+  </body>
+</html>
