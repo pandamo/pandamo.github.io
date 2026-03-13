@@ -8,7 +8,6 @@ class Game {
     this.selectedBottleIndex = null;
     this.maxCapacity = 10;
     this.storageKey = 'coinGameSave';
-    this.recordStorageKey = 'coinGameRecord'; // 历史纪录存储键
     this.isGameOver = false;
     this.pendingAnimation = null; // 存储待动画的移动信息
 
@@ -18,9 +17,6 @@ class Game {
   }
 
   init() {
-    // 加载历史最高纪录
-    this.loadRecord();
-
     // 优先尝试加载存档
     if (this.loadState()) {
       this.updateUI();
@@ -42,7 +38,8 @@ class Game {
       bottles: this.bottles,
       maxFaceValue: this.maxFaceValue,
       bottleCount: this.bottleCount,
-      isGameOver: this.isGameOver
+      isGameOver: this.isGameOver,
+      maxRecord: this.maxRecord
     };
     try {
       localStorage.setItem(this.storageKey, JSON.stringify(state));
@@ -60,34 +57,13 @@ class Game {
         this.maxFaceValue = state.maxFaceValue;
         this.bottleCount = state.bottleCount;
         this.isGameOver = state.isGameOver || false;
+        this.maxRecord = state.maxRecord || 1;
         return true;
       }
     } catch (e) {
       console.warn('加载状态失败', e);
     }
     return false;
-  }
-
-  // 加载历史最高纪录
-  loadRecord() {
-    try {
-      const saved = localStorage.getItem(this.recordStorageKey);
-      if (saved) {
-        this.maxRecord = parseInt(saved) || 1;
-      }
-    } catch (e) {
-      console.warn('加载纪录失败', e);
-      this.maxRecord = 1;
-    }
-  }
-
-  // 保存历史最高纪录
-  saveRecord() {
-    try {
-      localStorage.setItem(this.recordStorageKey, this.maxRecord.toString());
-    } catch (e) {
-      console.warn('保存纪录失败', e);
-    }
   }
 
   clearState() {
@@ -226,7 +202,6 @@ class Game {
         // 更新历史最高纪录
         if (newValue > this.maxRecord) {
           this.maxRecord = newValue;
-          this.saveRecord();
         }
         return true;
       }
