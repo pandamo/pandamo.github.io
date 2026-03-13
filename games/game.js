@@ -12,6 +12,8 @@ class Game {
     this.isGameOver = false;
     this.pendingAnimation = null; // 存储待动画的移动信息
 
+    this.debugCounter = 0
+
     this.init();
   }
 
@@ -116,10 +118,20 @@ class Game {
     _state && localStorage.setItem("coinGameSave", _state);
     location.reload();
   }
+  debug() {
+    this.debugCounter++
+    if (this.debugCounter > 10) {
+      document.getElementById('showState').hidden = false;
+      document.getElementById('readRecord').hidden = false;
+      document.getElementById('state').hidden = false;
+    }
+
+  }
 
   setupEventListeners() {
-    /* document.getElementById('showState').addEventListener('click', () => this.showState());
-    document.getElementById('readRecord').addEventListener('click', () => this.readRecord()); */
+    document.getElementById('showState').addEventListener('click', () => this.showState());
+    document.getElementById('readRecord').addEventListener('click', () => this.readRecord());
+    document.getElementById('status-bar').addEventListener('click', () => this.debug());
     document.getElementById('undo-btn').addEventListener('click', () => this.undo());
     document.getElementById('deal-btn').addEventListener('click', () => this.deal());
     document.getElementById('bottle-grid').addEventListener('click', (e) => {

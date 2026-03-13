@@ -19,14 +19,15 @@
           <span id="max-record"> 1 </span>
         </div>
       </div>
-      <!-- <div>
+      <div>
         <textarea
+          hidden
           name=""
           id="state"
           rows="5"
-          style="display: block; width: 100%"
+          style="width: 100%"
         ></textarea>
-      </div> -->
+      </div>
       <div id="bottle-grid">
         <!-- 瓶子将通过 JS 动态生成 -->
       </div>
@@ -35,8 +36,8 @@
         <button id="undo-btn">撤回</button>
         <button id="deal-btn">发放</button>
         <button id="reset-btn">重新开始</button>
-        <!-- <button id="showState">获取进度</button>
-        <button id="readRecord">恢复进度</button> -->
+        <button id="showState" hidden>获取进度</button>
+        <button id="readRecord" hidden>恢复进度</button>
       </div>
     </div>
     <script src="game.js"></script>
