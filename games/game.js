@@ -67,8 +67,28 @@ class Game {
   }
 
   clearState() {
+    // 保存历史最高纪录
+    const saved = localStorage.getItem(this.storageKey);
+    const preservedMaxRecord = saved ? JSON.parse(saved).maxRecord : 1;
+
+    // 清空 localStorage
     localStorage.removeItem(this.storageKey);
-    // 不清除历史纪录
+
+    // 重置游戏状态（但保留历史最高纪录）
+    this.maxRecord = preservedMaxRecord;
+    this.maxFaceValue = 1;
+    this.bottleCount = this.maxFaceValue + 1;
+    this.bottles = [];
+    this.history = [];
+    this.selectedBottleIndex = null;
+    this.isGameOver = false;
+    this.pendingAnimation = null;
+
+    // 重新初始化游戏
+    this.createBottles();
+    this.dealInitialCoins();
+    this.updateUI();
+    this.checkGameOver();
   }
   // ==================== 状态保存与加载 ====================
 
@@ -123,7 +143,7 @@ class Game {
       resetBtn.addEventListener('click', () => {
         if (confirm('确定要重置游戏吗？此操作将清除所有进度！')) {
           this.clearState();
-          location.reload();
+
         }
       });
     }
@@ -245,6 +265,9 @@ class Game {
     this.syncBottleCount();
     this.updateUI();
     this.saveState();
+
+    // deal 操作完成后，保存并标记这是 deal 后的状态
+    this.saveHistory(true);
     this.checkGameOver();
   }
 
@@ -303,19 +326,43 @@ class Game {
   }
   // ==================== 游戏结束检测 ====================
 
-  saveHistory() {
+  saveHistory(dealMarker = false) {
     const state = JSON.stringify(this.bottles);
-    this.history.push({
+    const historyEntry = {
       bottles: state,
       maxFaceValue: this.maxFaceValue,
-      bottleCount: this.bottleCount
-    });
-    if (this.history.length > 50) this.history.shift();
+      bottleCount: this.bottleCount,
+      isDeal: dealMarker // 标记是否是 deal 操作后的状态
+    };
+    this.history.push(historyEntry);
+
+    // 如果当前标记了 deal，移除之前的所有历史记录
+    if (dealMarker) {
+      // 只保留最新的这一个记录
+      this.history = [historyEntry];
+    } else if (this.history.length > 50) {
+      this.history.shift();
+    }
   }
 
   undo() {
     if (this.history.length > 0) {
       const prevState = this.history.pop();
+
+      // 如果刚才是 deal 操作，则不允许继续 undo
+      if (prevState.isDeal) {
+        // 恢复该状态，并清空历史
+        this.bottles = JSON.parse(prevState.bottles);
+        this.maxFaceValue = prevState.maxFaceValue;
+        this.bottleCount = prevState.bottleCount;
+        this.isGameOver = false;
+        this.history = []; // 清空历史，阻止继续 undo
+        this.updateUI();
+        this.saveState();
+        return;
+      }
+
+      // 正常 undo
       this.bottles = JSON.parse(prevState.bottles);
       this.maxFaceValue = prevState.maxFaceValue;
       this.bottleCount = prevState.bottleCount;
