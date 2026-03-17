@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Supabase 注册登录测试</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #f5f7fb;
+        color: #1f2937;
+      }
+
+      .page {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 28px;
+      }
+
+      p {
+        line-height: 1.6;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        box-sizing: border-box;
+        margin-bottom: 12px;
+        font-size: 14px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 14px;
+        cursor: pointer;
+        background: #2563eb;
+        color: #fff;
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+
+      button.secondary {
+        background: #475569;
+      }
+
+      button.danger {
+        background: #dc2626;
+      }
+
+      #status {
+        margin: 16px 0;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        white-space: pre-wrap;
+      }
+
+      #user-info,
+      #log {
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 14px;
+        border-radius: 8px;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        min-height: 72px;
+      }
+
+      .section-title {
+        margin: 20px 0 10px;
+        font-size: 18px;
+      }
+
+      @media (max-width: 640px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <script type="module">
+      import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+      const supabaseUrl = 'https://bkyoerblezhnainnhmzk.supabase.co'
+      const supabaseKey = 'sb_publishable_vJcduFNGLNYHXlywN9wuzw_RhBhlLlX'
+      const supabase = createClient(supabaseUrl, supabaseKey)
+
+      const statusEl = document.getElementById('status')
+      const userInfoEl = document.getElementById('user-info')
+      const logEl = document.getElementById('log')
+      const emailEl = document.getElementById('email')
+      const passwordEl = document.getElementById('password')
+
+      function formatJson(value) {
+        return JSON.stringify(value, null, 2)
+      }
+
+      function setStatus(message, isError = false) {
+        statusEl.textContent = message
+        statusEl.style.background = isError ? '#fef2f2' : '#eff6ff'
+        statusEl.style.color = isError ? '#b91c1c' : '#1d4ed8'
+      }
+
+      function appendLog(title, payload) {
+        const line = `[${new Date().toLocaleTimeString()}] ${title}\n${formatJson(payload)}\n\n`
+        logEl.textContent = line + logEl.textContent
+      }
+
+      async function refreshUser() {
+        const { data, error } = await supabase.auth.getUser()
+
+        if (error) {
+          userInfoEl.textContent = formatJson({ error: error.message })
+          appendLog('获取当前用户失败', { error: error.message })
+          return
+        }
+
+        userInfoEl.textContent = formatJson(data.user || null)
+      }
+
+      async function signUp() {
+        const email = emailEl.value.trim()
+        const password = passwordEl.value
+
+        if (!email || !password) {
+          setStatus('请输入邮箱和密码。', true)
+          return
+        }
+
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        })
+
+        if (error) {
+          setStatus(`注册失败：${error.message}`, true)
+          appendLog('注册失败', error)
+          return
+        }
+
+        setStatus('注册请求已提交。若开启邮箱确认，请去邮箱完成验证。')
+        appendLog('注册成功', data)
+        await refreshUser()
+      }
+
+      async function signIn() {
+        const email = emailEl.value.trim()
+        const password = passwordEl.value
+
+        if (!email || !password) {
+          setStatus('请输入邮箱和密码。', true)
+          return
+        }
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        })
+
+        if (error) {
+          setStatus(`登录失败：${error.message}`, true)
+          appendLog('登录失败', error)
+          return
+        }
+
+        setStatus('登录成功。')
+        appendLog('登录成功', data)
+        await refreshUser()
+      }
+
+      async function signOut() {
+        const { error } = await supabase.auth.signOut()
+
+        if (error) {
+          setStatus(`退出失败：${error.message}`, true)
+          appendLog('退出失败', error)
+          return
+        }
+
+        setStatus('已退出登录。')
+        appendLog('退出登录成功', { ok: true })
+        await refreshUser()
+      }
+
+      document.getElementById('sign-up-btn').addEventListener('click', signUp)
+      document.getElementById('sign-in-btn').addEventListener('click', signIn)
+      document.getElementById('refresh-user-btn').addEventListener('click', refreshUser)
+      document.getElementById('sign-out-btn').addEventListener('click', signOut)
+
+      supabase.auth.onAuthStateChange((_event, session) => {
+        appendLog('认证状态变化', {
+          event: _event,
+          session,
+        })
+        refreshUser()
+      })
+
+      refreshUser()
+      setStatus('页面已加载，可以开始测试注册和登录。')
+    </script>
+  </head>
+  <body>
+    <div class="page">
+      <div class="card">
+        <h1>Supabase 注册登录测试</h1>
+        <p>
+          这个页面用于测试 Supabase 邮箱注册和登录。当前已写入你的项目 URL 和
+          publishable key。
+        </p>
+
+        <div class="grid">
+          <div>
+            <label for="email">邮箱</label>
+            <input id="email" type="email" placeholder="请输入邮箱" />
+          </div>
+          <div>
+            <label for="password">密码</label>
+            <input id="password" type="password" placeholder="请输入密码" />
+          </div>
+        </div>
+
+        <div>
+          <button id="sign-up-btn">注册</button>
+          <button id="sign-in-btn">登录</button>
+          <button id="refresh-user-btn" class="secondary">获取当前用户</button>
+          <button id="sign-out-btn" class="danger">退出登录</button>
+        </div>
+
+        <div id="status">正在初始化...</div>
+
+        <div class="section-title">当前用户</div>
+        <pre id="user-info"></pre>
+
+        <div class="section-title">日志</div>
+        <pre id="log"></pre>
+      </div>
+    </div>
+  </body>
+</html>

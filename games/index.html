@@ -3,43 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>硬币合并小游戏</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>硬币合并排行榜</title>
+    <link rel="stylesheet" href="./home.css" />
   </head>
-
   <body>
-    <div id="game-container">
-      <div id="status-bar">
-        <div>
-          当前最高数字
-          <div id="max-value">1</div>
-        </div>
-        <div>
-          最高纪录：
-          <span id="max-record"> 1 </span>
-        </div>
-      </div>
-      <div>
-        <textarea
-          hidden
-          name=""
-          id="state"
-          rows="5"
-          style="width: 100%"
-        ></textarea>
-      </div>
-      <div id="bottle-grid">
-        <!-- 瓶子将通过 JS 动态生成 -->
-      </div>
+    <div class="page">
+      <header class="hero">
+        <h1>硬币合并小游戏</h1>
+        <p>
+          挑战更高数字，刷新你的个人最佳。注册后可同步游戏进度，并在全站排行榜争夺前十。
+        </p>
+      </header>
 
-      <div id="controls">
-        <button id="undo-btn">撤回</button>
-        <button id="deal-btn">发放</button>
-        <button id="reset-btn">重新开始</button>
-        <button id="showState" hidden>获取进度</button>
-        <button id="readRecord" hidden>恢复进度</button>
-      </div>
+      <main class="main">
+        <section class="card">
+          <h2 class="section-title">全站最高纪录 TOP10</h2>
+          <div id="leaderboard-status" class="status">正在初始化排行榜...</div>
+          <ol id="leaderboard-list" class="rank-list"></ol>
+        </section>
+      </main>
+
+      <footer class="footer-actions">
+        <div id="auth-actions" class="action-bar">
+          <a class="button primary" href="./auth.html">注册</a>
+          <a class="button secondary" href="./auth.html">登录</a>
+        </div>
+        <div id="game-action" class="action-bar hidden">
+          <a class="button primary" href="./game.html">进入游戏</a>
+        </div>
+      </footer>
     </div>
-    <script src="game.js"></script>
+
+    <script type="module" src="./home.js"></script>
   </body>
 </html>

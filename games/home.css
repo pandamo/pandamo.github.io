@@ -1,0 +1,157 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+  color: #e5e7eb;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero {
+  padding: 48px 20px 24px;
+  text-align: center;
+}
+
+.hero h1 {
+  margin: 0 0 12px;
+  font-size: 36px;
+}
+
+.hero p {
+  max-width: 680px;
+  margin: 0 auto;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.main {
+  width: min(860px, calc(100% - 32px));
+  margin: 0 auto 32px;
+}
+
+.card {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(8px);
+}
+
+.section-title {
+  margin: 0 0 18px;
+  font-size: 24px;
+}
+
+.status {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(30, 41, 59, 0.9);
+  color: #cbd5e1;
+}
+
+.status.error {
+  background: rgba(127, 29, 29, 0.75);
+  color: #fecaca;
+}
+
+.rank-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.rank-item {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(30, 41, 59, 0.85);
+}
+
+.rank-no {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.rank-name {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.rank-score {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fde68a;
+}
+
+.empty {
+  color: #94a3b8;
+  text-align: center;
+  padding: 28px 0 8px;
+}
+
+.footer-actions {
+  margin-top: auto;
+  padding: 24px 20px 36px;
+}
+
+.action-bar {
+  width: min(860px, calc(100% - 32px));
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 132px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.button.primary {
+  background: #2563eb;
+  color: #fff;
+}
+
+.button.secondary {
+  background: transparent;
+  border-color: rgba(148, 163, 184, 0.4);
+  color: #e2e8f0;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .rank-item {
+    grid-template-columns: 48px 1fr;
+  }
+
+  .rank-score {
+    grid-column: 2;
+  }
+}

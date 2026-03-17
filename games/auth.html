@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>注册或登录</title>
+    <link rel="stylesheet" href="./auth.css" />
+  </head>
+  <body>
+    <main class="card">
+      <h1>注册 / 登录</h1>
+      <p>注册后即可同步游戏进度，并参与全站最高纪录排行榜。</p>
+
+      <label for="email">邮箱</label>
+      <input id="email" type="email" placeholder="请输入邮箱" />
+
+      <label for="password">密码</label>
+      <input id="password" type="password" placeholder="请输入密码" />
+
+      <div class="actions">
+        <button id="sign-up-btn" class="primary">注册</button>
+        <button id="sign-in-btn" class="secondary">登录</button>
+        <a class="link-button" href="./index.html">返回首页</a>
+      </div>
+
+      <div id="status">请输入邮箱和密码。</div>
+    </main>
+
+    <script type="module" src="./auth.js"></script>
+  </body>
+</html>
