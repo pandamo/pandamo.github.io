@@ -64,11 +64,12 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 10px;
 }
 
 .section-title {
-  margin: 0 0 18px;
-  font-size: 24px;
+  font-size: 20px;
+  margin: 0;
 }
 
 .section-icon {
@@ -180,6 +181,9 @@ button {
   justify-content: center;
   gap: 12px;
 }
+.action-bar .button {
+  min-width: 150px;
+}
 
 .button,
 .link-button,
@@ -190,7 +194,7 @@ button {
   justify-content: center;
 
   padding: 10px;
-  border-radius: 999px;
+  border-radius: 5px;
   text-decoration: none;
   font-weight: 700;
   border: 1px solid transparent;
@@ -256,6 +260,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  justify-content: space-between;
 }
 
 .status-panel {
@@ -593,8 +598,8 @@ table.status-bar td {
 .controls button,
 .actions button,
 .link-button {
-  border-radius: 0;
   font-size: 12px;
+  flex: 1;
 }
 
 button:disabled {
