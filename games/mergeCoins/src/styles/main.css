@@ -389,10 +389,12 @@ button {
   text-align: center;
   padding: 8px 12px;
   background: #232323;
-  display: block;
+  display: flex;
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: "pixelfont";
+  align-items: center;
+  justify-content: center;
 }
 
 .player-name {
@@ -458,6 +460,23 @@ table.status-bar td {
   background: #4a1414;
   text-align: center;
   font-weight: 800;
+}
+
+@keyframes coin-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-14px) scaleY(0.9);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(2px) scaleY(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
 }
 
 .bottle-grid {
@@ -530,6 +549,8 @@ table.status-bar td {
   font-family: "pixelfont";
   text-shadow: -1px 1px 1px #000;
   line-height: 15px;
+  transform-origin: top center;
+  animation: coin-drop 220ms ease-out;
 }
 
 .controls {
