@@ -463,7 +463,7 @@ table.status-bar td {
 .bottle-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+  gap: 6px;
   overflow-y: auto;
   padding-bottom: 100px;
 }
@@ -478,7 +478,7 @@ table.status-bar td {
   padding: 0 0 2px;
   cursor: pointer;
   background: #000000;
-  border: 6px groove #afafaf;
+  border: 4px groove #8d8d8d;
   border-top-width: 0;
   border-radius: 0 0 4px 4px;
 }
@@ -522,13 +522,13 @@ table.status-bar td {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 16px;
+  font-size: 12px;
   color: #fff;
   box-shadow:
     inset 2px -2px 0 rgba(0, 0, 0, 0.25),
     2px 2px 0 rgba(0, 0, 0, 0.4);
   font-family: "pixelfont";
-  text-shadow: -1px 1px 2px #000;
+  text-shadow: -1px 1px 1px #000;
   line-height: 15px;
 }
 
