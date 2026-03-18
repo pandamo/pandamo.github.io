@@ -1,54 +1,62 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>硬币合并小游戏</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
 
-  <body>
-    <div id="game-container">
-      <div id="page-actions">
-        <a class="page-link" href="./index.html">返回首页</a>
-        <div id="player-summary">
-          <span id="player-name">玩家</span>
-          <span id="sync-status">正在检查登录状态...</span>
-        </div>
-        <button id="logout-btn" type="button">退出登录</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>硬币合并小游戏</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="game-loading" class="game-loading" aria-label="游戏加载中">
+    <span class="game-loading-spinner" aria-hidden="true"></span>
+  </div>
+
+  <div id="game-container" class="game-hidden">
+    <div id="page-actions">
+      <a class="page-link home-link" href="./index.html" aria-label="返回首页" title="返回首页">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12 3s-6.186 5.34-9.643 8.232A1.04 1.04 0 0 0 2 12a1 1 0 0 0 1 1h2v7a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-4h4v4a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-7h2a1 1 0 0 0 1-1a.98.98 0 0 0-.383-.768C18.184 8.34 12 3 12 3" />
+        </svg>
+      </a>
+      <div id="player-summary">
+        <span id="player-name">玩家</span>
+        <span id="sync-status"><!-- 正在检查登录状态... --></span>
       </div>
+      <button id="logout-btn" class="icon-button logout-link" type="button" aria-label="退出登录" title="退出登录">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 15l3-3m0 0l-3-3m3 3H4m0-4.752V7.2c0-1.12 0-1.68.218-2.108c.192-.377.497-.682.874-.874C5.52 4 6.08 4 7.2 4h9.6c1.12 0 1.68 0 2.107.218c.377.192.683.497.875.874c.218.427.218.987.218 2.105v9.607c0 1.118 0 1.677-.218 2.104a2 2 0 0 1-.875.874c-.427.218-.986.218-2.104.218H7.197c-1.118 0-1.678 0-2.105-.218a2 2 0 0 1-.874-.874C4 18.48 4 17.92 4 16.8v-.05" />
+        </svg>
+      </button>
+    </div>
 
-      <div id="status-bar">
-        <div>
-          当前最高数字
-          <div id="max-value">1</div>
-        </div>
-        <div>
-          最高纪录：
-          <span id="max-record"> 1 </span>
-        </div>
+    <div id="status-bar">
+      <div>
+        当前最高数字
+        <div id="max-value">1</div>
       </div>
       <div>
-        <textarea
-          hidden
-          name=""
-          id="state"
-          rows="5"
-          style="width: 100%"
-        ></textarea>
-      </div>
-      <div id="bottle-grid">
-        <!-- 瓶子将通过 JS 动态生成 -->
-      </div>
-
-      <div id="controls">
-        <button id="undo-btn">撤回</button>
-        <button id="deal-btn">发放</button>
-        <button id="reset-btn">重新开始</button>
-        <button id="showState" hidden>获取进度</button>
-        <button id="readRecord" hidden>恢复进度</button>
+        最高纪录：
+        <span id="max-record"> 1 </span>
       </div>
     </div>
-    <script type="module" src="./game.js"></script>
-  </body>
+    <div>
+      <textarea hidden name="" id="state" rows="5" style="width: 100%"></textarea>
+    </div>
+    <div id="bottle-grid">
+      <!-- 瓶子将通过 JS 动态生成 -->
+    </div>
+
+    <div id="controls">
+      <button id="undo-btn">撤回</button>
+      <button id="deal-btn">发放</button>
+      <button id="reset-btn">重新开始</button>
+      <button id="showState" hidden>获取进度</button>
+      <button id="readRecord" hidden>恢复进度</button>
+    </div>
+  </div>
+  <script type="module" src="./game.js"></script>
+</body>
+
 </html>

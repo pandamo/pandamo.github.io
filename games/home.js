@@ -6,8 +6,24 @@ const authActionsEl = document.getElementById('auth-actions')
 const gameActionEl = document.getElementById('game-action')
 
 function setStatus(message, isError = false) {
-  statusEl.textContent = message
+  if (message == 'end') {
+    statusEl.remove()
+    return
+  }
   statusEl.classList.toggle('error', isError)
+  statusEl.classList.toggle('loading', !message && !isError)
+  statusEl.textContent = ''
+
+
+  if (!message && !isError) {
+    const spinner = document.createElement('span')
+    spinner.className = 'loading-spinner'
+    spinner.setAttribute('aria-hidden', 'true')
+    statusEl.appendChild(spinner)
+    return
+  }
+
+  statusEl.textContent = message
 }
 
 function renderEntries(entries) {
@@ -28,7 +44,7 @@ function renderEntries(entries) {
 }
 
 async function loadLeaderboard() {
-  setStatus('正在加载排行榜...')
+  setStatus('')
 
   const { data, error } = await supabase
     .from('leaderboard_entries')
@@ -44,7 +60,7 @@ async function loadLeaderboard() {
   }
 
   renderEntries(data || [])
-  setStatus('排行榜已更新。')
+  setStatus('end')
 }
 
 async function updateAuthActions() {

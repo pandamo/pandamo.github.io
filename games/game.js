@@ -22,7 +22,6 @@ class Game {
 
     this.setPlayerName();
     this.bindAuthActions();
-    this.init();
   }
 
   async init() {
@@ -53,7 +52,8 @@ class Game {
         this.setSyncStatus(`退出失败：${error.message}`, true);
         return;
       }
-      window.location.href = './auth.html';
+      localStorage.removeItem(this.storageKey);
+      window.location.href = './index.html';
     });
   }
 
@@ -162,7 +162,7 @@ class Game {
   }
 
   async loadRemoteState() {
-    this.setSyncStatus('正在读取云端存档...');
+    //this.setSyncStatus('正在读取云端存档...');
     const { data, error } = await supabase
       .from('game_saves')
       .select('bottles,max_face_value,bottle_count,is_game_over,max_record')
@@ -193,7 +193,7 @@ class Game {
       console.warn('缓存远端存档失败', e);
     }
 
-    this.setSyncStatus('已加载云端存档。');
+    //this.setSyncStatus('已加载云端存档。');
     return true;
   }
 
@@ -651,6 +651,8 @@ class Game {
 
 async function bootGame() {
   const statusEl = document.getElementById('sync-status');
+  const loadingEl = document.getElementById('game-loading');
+  const containerEl = document.getElementById('game-container');
   const { data, error } = await supabase.auth.getUser();
 
   if (error || !data.user) {
@@ -662,7 +664,23 @@ async function bootGame() {
     return;
   }
 
-  new Game(data.user);
+  const game = new Game(data.user);
+  await game.init();
+
+  if (loadingEl) {
+    loadingEl.classList.add('game-loading-fadeout');
+  }
+  if (containerEl) {
+    containerEl.classList.remove('game-hidden');
+    requestAnimationFrame(() => {
+      containerEl.classList.add('game-visible');
+    });
+  }
+  if (loadingEl) {
+    setTimeout(() => {
+      loadingEl.remove();
+    }, 280);
+  }
 }
 
 window.addEventListener('load', () => {

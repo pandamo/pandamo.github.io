@@ -5,6 +5,7 @@ const passwordEl = document.getElementById('password')
 const statusEl = document.getElementById('status')
 
 function setStatus(message, isError = false) {
+  message && (statusEl.hidden = false)
   statusEl.textContent = message
   statusEl.classList.toggle('error', isError)
 }
@@ -20,6 +21,20 @@ async function upsertProfile(user, email) {
   if (error) {
     throw error
   }
+}
+
+async function checkEmailRegistered(email) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('email', email)
+    .maybeSingle()
+
+  if (error) {
+    throw error
+  }
+
+  return Boolean(data)
 }
 
 async function ensureSessionRedirect() {
@@ -44,10 +59,26 @@ async function signUp() {
     return
   }
 
+  try {
+    const isRegistered = await checkEmailRegistered(email)
+    if (isRegistered) {
+      setStatus('该邮箱已注册，请直接登录。', true)
+      return
+    }
+  } catch (checkError) {
+    setStatus(`注册前检查失败：${checkError.message}`, true)
+    return
+  }
+
   const { data, error } = await supabase.auth.signUp({ email, password })
 
   if (error) {
     setStatus(`注册失败：${error.message}`, true)
+    return
+  }
+
+  if (data.user?.identities && data.user.identities.length === 0) {
+    setStatus('该邮箱已注册，请直接登录。', true)
     return
   }
 
@@ -60,7 +91,7 @@ async function signUp() {
     }
   }
 
-  setStatus('注册成功。若开启邮箱确认，请先完成邮箱验证后再登录。')
+  setStatus('请检查邮箱，根据验证邮箱链接验证后再登录。')
 }
 
 async function signIn() {

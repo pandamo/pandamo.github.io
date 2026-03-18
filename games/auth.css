@@ -9,7 +9,7 @@ body {
 }
 
 .card {
-  width: min(460px, calc(100% - 32px));
+  width: min(460px, calc(80% - 1em));
   background: #111;
   border: 1px solid #2a2a2a;
   border-radius: 16px;
@@ -40,10 +40,10 @@ input {
   box-sizing: border-box;
   margin-bottom: 16px;
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: 6px;
   border: 1px solid #333;
-  background: #000;
-  color: #fff;
+  background: #fff;
+  color: #000;
   font-size: 15px;
 }
 

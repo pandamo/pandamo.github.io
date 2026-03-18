@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+  background: #000;
   color: #e5e7eb;
 }
 
@@ -34,7 +34,7 @@ body {
 }
 
 .card {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgb(255 255 255 / 5%);
   border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 20px;
   padding: 24px;
@@ -51,8 +51,31 @@ body {
   margin-bottom: 16px;
   padding: 12px 14px;
   border-radius: 12px;
-  background: rgba(30, 41, 59, 0.9);
   color: #cbd5e1;
+}
+
+.status.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.loading-spinner {
+  display: block;
+  margin: auto;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-top-color: #93c5fd;
+  border-radius: 50%;
+  animation: leaderboard-spin 0.8s linear infinite;
+}
+
+@keyframes leaderboard-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .status.error {
@@ -69,13 +92,13 @@ body {
 }
 
 .rank-item {
-  display: grid;
-  grid-template-columns: 64px 1fr auto;
+  display: flex;
   align-items: center;
-  gap: 14px;
   padding: 14px 16px;
   border-radius: 16px;
-  background: rgba(30, 41, 59, 0.85);
+  background: rgb(210 210 210 / 9%);
+  gap: 10px;
+  justify-content: space-between;
 }
 
 .rank-no {
@@ -85,6 +108,7 @@ body {
 }
 
 .rank-name {
+  flex: 1;
   font-size: 17px;
   font-weight: 600;
 }
