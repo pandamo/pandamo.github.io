@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AuthView from '../views/AuthView.vue'
 import GameView from '../views/GameView.vue'
+import PaletteView from '../views/PaletteView.vue'
 import { supabase } from '../lib/supabase'
 
 const router = createRouter({
@@ -24,6 +25,11 @@ const router = createRouter({
       component: GameView,
       meta: { requiresAuth: true },
     },
+    /* {
+      path: '/palette',
+      name: 'palette',
+      component: PaletteView,
+    }, */
   ],
 })
 

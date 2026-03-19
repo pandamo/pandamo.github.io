@@ -494,12 +494,12 @@ table.status-bar td {
 
 .pixel-bottle {
   position: relative;
-  height: 198px;
+  height: 193px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-end;
-  padding: 0 0 2px;
+  padding: 0 0 1px;
   cursor: pointer;
   background: #000000;
   border: 4px groove #8d8d8d;
@@ -540,8 +540,8 @@ table.status-bar td {
 }
 
 .pixel-coin {
-  width: 92%;
-  padding: 1px 0;
+  width: 95%;
+  padding: 0 0 2px;
   margin-bottom: 0;
   display: flex;
   justify-content: center;
@@ -549,13 +549,114 @@ table.status-bar td {
   font-size: 12px;
   color: #fff;
   box-shadow:
-    inset 2px -2px 0 rgba(0, 0, 0, 0.25),
-    2px 2px 0 rgba(0, 0, 0, 0.4);
+    inset 3px -3px 0 rgba(0, 0, 0, 0.25),
+    inset -3px 3px 0 rgba(255, 255, 255, 0.35);
   font-family: "pixelfont";
-  text-shadow: -1px 1px 1px #000;
+  text-shadow:
+    -1px 1px 0 #000000a3,
+    1px -1px 0 #000000a3,
+    1px 1px 0 #000000a3,
+    -1px -1px 0 #000000a3;
   line-height: 15px;
   transform-origin: top center;
   animation: coin-drop 220ms ease-out;
+  border-radius: 2px;
+}
+
+.palette-page {
+  padding: 24px 0 40px;
+}
+
+.palette-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.palette-card,
+.palette-output-card {
+  padding: 16px;
+}
+
+.palette-header {
+  margin-bottom: 16px;
+}
+
+.palette-count {
+  color: #f4e285;
+  font-size: 14px;
+}
+
+.palette-hidden-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.palette-swatch {
+  position: relative;
+  aspect-ratio: 1;
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0 #000;
+  cursor: grab;
+  padding: 0;
+}
+
+.palette-swatch:hover {
+  transform: translate(-1px, -1px);
+}
+
+.palette-swatch:active,
+.palette-swatch.dragging {
+  cursor: grabbing;
+}
+
+.palette-swatch.dragging {
+  opacity: 0.55;
+  transform: scale(0.96);
+}
+
+.palette-swatch.drag-over {
+  outline: 3px dashed #ffffff;
+  outline-offset: 2px;
+}
+
+.palette-swatch.active {
+  outline: 3px solid #f4e285;
+  outline-offset: 2px;
+}
+
+.palette-swatch-index {
+  position: absolute;
+  right: 4px;
+  bottom: 2px;
+  font-size: 10px;
+  color: #fff;
+  text-shadow: -1px 1px 1px #000;
+}
+
+.palette-copy-button {
+  min-width: 140px;
+}
+
+.palette-output {
+  width: 100%;
+  min-height: 320px;
+  resize: vertical;
+  border: 3px solid #000;
+  background: #111;
+  color: #f3f4f6;
+  padding: 12px;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .controls {
