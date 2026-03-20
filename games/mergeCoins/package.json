@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "icons:generate": "node scripts/generate-icons.mjs",
+    "build": "pnpm icons:generate && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -15,6 +16,8 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
+    "@iconify-json/pixelarticons": "^1.2.4",
+    "@iconify-json/solar": "^1.2.5",
     "@vitejs/plugin-vue": "^5.2.1",
     "vite": "^6.2.2"
   }

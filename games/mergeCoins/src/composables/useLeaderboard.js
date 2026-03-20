@@ -6,7 +6,7 @@ export function useLeaderboard() {
   const loading = ref(false)
   const errorMessage = ref('')
 
-  async function loadLeaderboard() {
+  async function loadLeaderboard(limit = 10) {
     loading.value = true
     errorMessage.value = ''
 
@@ -15,7 +15,7 @@ export function useLeaderboard() {
       .select('display_name,max_record,updated_at')
       .order('max_record', { ascending: false })
       .order('updated_at', { ascending: true })
-      .limit(10)
+      .limit(limit)
 
     if (error) {
       entries.value = []
@@ -29,10 +29,16 @@ export function useLeaderboard() {
     return true
   }
 
+  async function loadTopRecord() {
+    const loaded = await loadLeaderboard(1)
+    return loaded ? entries.value[0]?.max_record || 1 : 1
+  }
+
   return {
     entries,
     loading,
     errorMessage,
     loadLeaderboard,
+    loadTopRecord,
   }
 }

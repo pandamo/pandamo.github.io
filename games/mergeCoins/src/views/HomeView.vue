@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from "vue";
-import { Icon } from "@iconify/vue";
+import { Icon } from "@iconify/vue/offline";
 import LeaderboardList from "../components/LeaderboardList.vue";
 import { useAuth } from "../composables/useAuth";
 import { useLeaderboard } from "../composables/useLeaderboard";
@@ -22,10 +22,10 @@ onMounted(async () => {
       <h1>Merge Coins</h1>
     </header>
 
-    <main class="main-panel shell-card">
+    <main class="main-panel shell-card pixel-panel">
       <div class="section-header">
+        <Icon icon="pixelarticons:crown-sharp" class="section-icon" />
         <h2 class="section-title">TOP10</h2>
-        <Icon icon="solar:ranking-bold" class="section-icon" />
       </div>
 
       <div v-if="loading" class="status loading">
@@ -41,18 +41,18 @@ onMounted(async () => {
     <footer v-if="initialized" class="footer-actions">
       <div v-if="user" class="action-bar">
         <RouterLink class="button primary" to="/game">
-          <Icon icon="solar:play-bold" />
-          <span>进入游戏</span>
+          <Icon
+            icon="pixelarticons:chevron-right-2"
+            width="48"
+            color="#fbbf24"
+          />
         </RouterLink>
       </div>
       <div v-else class="action-bar">
         <RouterLink class="button primary" to="/auth">
-          <Icon icon="solar:user-plus-bold" />
-          <span>注册</span>
-        </RouterLink>
-        <RouterLink class="button secondary" to="/auth">
-          <Icon icon="solar:login-2-bold" />
-          <span>登录</span>
+          <Icon icon="pixelarticons:user-plus" width="24" />
+          /
+          <Icon icon="pixelarticons:login" width="24" />
         </RouterLink>
       </div>
     </footer>

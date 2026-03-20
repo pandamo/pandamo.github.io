@@ -62,9 +62,9 @@ button {
 .section-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 21px;
   margin-bottom: 10px;
+  padding: 0 14px;
 }
 
 .section-title {
@@ -133,6 +133,15 @@ button {
   display: grid;
   gap: 12px;
 }
+.rank-list .rank-item:first-child {
+  background-color: rgb(253 230 138 / 60%);
+}
+.rank-list .rank-item:nth-child(2) {
+  background-color: rgb(253 230 138 / 40%);
+}
+.rank-list .rank-item:nth-child(3) {
+  background-color: rgb(253 230 138 / 20%);
+}
 
 .rank-item {
   display: flex;
@@ -140,8 +149,8 @@ button {
   justify-content: space-between;
   gap: 10px;
   padding: 14px 16px;
-  border-radius: 16px;
   background: rgb(210 210 210 / 9%);
+  text-shadow: 1px 1px black;
 }
 
 .rank-no {
@@ -185,6 +194,7 @@ button {
 }
 .action-bar .button {
   min-width: 150px;
+  padding: 10px;
 }
 
 .button,
@@ -195,19 +205,21 @@ button {
   align-items: center;
   justify-content: center;
 
-  padding: 10px;
-  border-radius: 5px;
+  padding: 5px;
   text-decoration: none;
   font-weight: 700;
   border: 1px solid transparent;
   cursor: pointer;
+  gap: 5px;
+  padding: 10px;
 }
 
 .button.primary,
 .actions .primary,
 .controls button {
   background: #323232;
-  color: #fff;
+  color: #f4e285;
+  padding: 5px;
 }
 
 .button.secondary,
@@ -220,7 +232,6 @@ button {
 
 .auth-page {
   display: grid;
-  place-items: center;
 }
 
 .auth-card {
@@ -251,11 +262,16 @@ button {
   width: 100%;
   margin-bottom: 16px;
   padding: 12px 14px;
-  border-radius: 6px;
-  border: 1px solid #333;
-  background: #fff;
-  color: #000;
+  background: #000000 !important;
+  color: #f4e285;
   font-size: 15px;
+  border: 2px groove #f4e285;
+  outline: none;
+}
+input:-internal-autofill-selected {
+  background-color: transparent !important;
+  -webkit-text-fill-color: #f4e285 !important;
+  transition: background-color 99999s ease-out;
 }
 
 .actions {
@@ -263,6 +279,7 @@ button {
   flex-wrap: wrap;
   gap: 12px;
   justify-content: space-between;
+  margin-top: 10px;
 }
 
 .status-panel {
@@ -362,7 +379,7 @@ button {
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  gap: 12px;
+  gap: 5px;
   margin-bottom: -2px;
   padding: 5px;
 }
@@ -404,11 +421,40 @@ button {
   justify-content: center;
 }
 
-.player-name {
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: 1px;
+.player-name-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
   text-transform: uppercase;
+}
+
+.game-save-panel {
+  margin: 0 0 10px;
+}
+
+.game-save-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.game-save-output {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  border: 1px solid #2a2a2a;
+  background: #101010;
+  color: #cbd5e1;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .sync-status {
@@ -432,9 +478,11 @@ table.status-bar {
   text-align: center;
 }
 table.status-bar td {
-  width: 50%;
+  width: 33%;
   border: 4px groove #f4e285;
   padding: 5px;
+  font-size: 14px;
+  line-height: 1em;
 }
 
 .status-box {
@@ -445,12 +493,13 @@ table.status-bar td {
 }
 
 .status-value,
-.status-record {
-  font-size: 24px;
+.status-record,
+.status-word-record {
+  font-size: 20px;
   font-weight: 700;
   display: block;
-  line-height: 1;
   font-family: "pixelfont";
+  line-height: 27px;
 }
 
 .status-value {
@@ -458,9 +507,11 @@ table.status-bar td {
 }
 
 .status-record {
-  color: #ffd700;
+  color: #f4e285;
 }
-
+.status-word-record {
+  color: #ffc009;
+}
 .game-over-banner {
   margin-bottom: 16px;
   padding: 12px 14px;
@@ -496,7 +547,7 @@ table.status-bar td {
 
 .pixel-bottle {
   position: relative;
-  height: 193px;
+  height: 196px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -577,7 +628,7 @@ table.status-bar td {
     0 0 12px rgba(244, 226, 133, 0.5),
     inset 3px -3px 0 rgba(0, 0, 0, 0.22),
     inset -3px 3px 0 rgba(255, 255, 255, 0.4);
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.05);
 }
 
 .palette-page {
@@ -718,6 +769,46 @@ table.status-bar td {
 .link-button {
   font-size: 12px;
   flex: 1;
+}
+
+.signout-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.68);
+}
+
+.signout-confirm-dialog {
+  width: min(100%, 320px);
+  padding: 18px 16px;
+  box-shadow: 6px 6px 0 #000;
+}
+
+.signout-confirm-title {
+  margin-bottom: 10px;
+  color: #f4e285;
+  font-size: 18px;
+  text-align: center;
+}
+
+.signout-confirm-text {
+  margin-bottom: 16px;
+  line-height: 1.6;
+  text-align: center;
+  color: #e5e7eb;
+}
+
+.signout-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.signout-confirm-actions .pixel-action-button {
+  min-width: 0;
 }
 
 button:disabled {

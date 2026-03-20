@@ -1,22 +1,22 @@
 <script setup>
-import { useRouter, RouterLink } from 'vue-router'
-import AuthForm from '../components/AuthForm.vue'
-import { useAuth } from '../composables/useAuth'
+import { useRouter, RouterLink } from "vue-router";
+import AuthForm from "../components/AuthForm.vue";
+import { useAuth } from "../composables/useAuth";
 
-const router = useRouter()
-const { loading, statusMessage, statusIsError, signUp, signIn } = useAuth()
+const router = useRouter();
+const { loading, statusMessage, statusIsError, signUp, signIn } = useAuth();
 
 async function handleSignUp(form) {
-  const success = await signUp(form.email.trim(), form.password)
+  const success = await signUp(form.email.trim(), form.password);
   if (success) {
-    form.password = ''
+    form.password = "";
   }
 }
 
 async function handleSignIn(form) {
-  const success = await signIn(form.email.trim(), form.password)
+  const success = await signIn(form.email.trim(), form.password);
   if (success) {
-    router.push('/game')
+    router.push("/game");
   }
 }
 </script>

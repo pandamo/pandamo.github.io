@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, nextTick } from "vue";
-import { Icon } from "@iconify/vue";
+import { Icon } from "@iconify/vue/offline";
 import { RouterLink } from "vue-router";
 import { defaultColors } from "../composables/useGameState";
 
