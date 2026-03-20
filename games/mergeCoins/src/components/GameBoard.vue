@@ -9,6 +9,10 @@ const props = defineProps({
     default: null,
   },
   isGameOver: Boolean,
+  maxCapacity: {
+    type: Number,
+    required: true,
+  },
   getColorForValue: {
     type: Function,
     required: true,
@@ -16,6 +20,57 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["select"]);
+
+function getSelectedTopValue() {
+  if (props.selectedBottleIndex === null) {
+    return null;
+  }
+
+  const selectedBottle = props.bottles[props.selectedBottleIndex];
+  if (!selectedBottle?.length) {
+    return null;
+  }
+
+  return selectedBottle[selectedBottle.length - 1];
+}
+
+function getTopRunStartIndex(bottle) {
+  if (!bottle.length) {
+    return -1;
+  }
+
+  const topValue = bottle[bottle.length - 1];
+  let startIndex = bottle.length - 1;
+
+  while (startIndex > 0 && bottle[startIndex - 1] === topValue) {
+    startIndex -= 1;
+  }
+
+  return startIndex;
+}
+
+function shouldHighlightCoin(bottle, bottleIndex, coinIndex) {
+  const selectedTopValue = getSelectedTopValue();
+  if (selectedTopValue === null || !bottle.length) {
+    return false;
+  }
+
+  const topValue = bottle[bottle.length - 1];
+  if (topValue !== selectedTopValue) {
+    return false;
+  }
+
+  const topRunStartIndex = getTopRunStartIndex(bottle);
+  if (coinIndex < topRunStartIndex) {
+    return false;
+  }
+
+  if (bottleIndex === props.selectedBottleIndex) {
+    return true;
+  }
+
+  return bottle.length < props.maxCapacity;
+}
 </script>
 
 <template>
@@ -37,6 +92,7 @@ const emit = defineEmits(["select"]);
           v-for="(value, coinIndex) in bottle"
           :key="`${index}-${coinIndex}-${value}`"
           class="coin pixel-coin"
+          :class="{ highlighted: shouldHighlightCoin(bottle, index, coinIndex) }"
           :style="{ backgroundColor: props.getColorForValue(value) }"
         >
           {{ value }}

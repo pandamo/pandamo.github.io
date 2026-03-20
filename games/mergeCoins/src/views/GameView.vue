@@ -18,6 +18,7 @@ const {
   selectedBottleIndex,
   isGameOver,
   canUndo,
+  maxCapacity,
   getColorForValue,
 } = gameState;
 const syncReady = ref(false);
@@ -162,6 +163,7 @@ onMounted(async () => {
         :bottles="bottles"
         :selected-bottle-index="selectedBottleIndex"
         :is-game-over="isGameOver"
+        :max-capacity="maxCapacity"
         :get-color-for-value="getColorForValue"
         @select="handleBottleSelect"
       />

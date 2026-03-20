@@ -1,16 +1,19 @@
 <script setup>
-import { onMounted } from 'vue'
-import { Icon } from '@iconify/vue'
-import LeaderboardList from '../components/LeaderboardList.vue'
-import { useAuth } from '../composables/useAuth'
-import { useLeaderboard } from '../composables/useLeaderboard'
+import { onMounted } from "vue";
+import { Icon } from "@iconify/vue";
+import LeaderboardList from "../components/LeaderboardList.vue";
+import { useAuth } from "../composables/useAuth";
+import { useLeaderboard } from "../composables/useLeaderboard";
 
-const { user, initialized, refreshSession } = useAuth()
-const { entries, loading, errorMessage, loadLeaderboard } = useLeaderboard()
+const { user, initialized, refreshSession } = useAuth();
+const { entries, loading, errorMessage, loadLeaderboard } = useLeaderboard();
+//const loading = ref(false);
 
 onMounted(async () => {
-  await Promise.all([loadLeaderboard(), refreshSession()])
-})
+  //loading.value = true;
+  await Promise.all([loadLeaderboard(), refreshSession()]);
+  // loading.value = false;
+});
 </script>
 
 <template>
@@ -32,7 +35,7 @@ onMounted(async () => {
         {{ errorMessage }}
       </div>
 
-      <LeaderboardList :entries="entries" />
+      <LeaderboardList :entries="entries" :loading="loading" />
     </main>
 
     <footer v-if="initialized" class="footer-actions">
