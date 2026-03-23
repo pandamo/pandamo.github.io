@@ -55,21 +55,17 @@ function shouldHighlightCoin(bottle, bottleIndex, coinIndex) {
     return false;
   }
 
-  const topValue = bottle[bottle.length - 1];
-  if (topValue !== selectedTopValue) {
-    return false;
-  }
-
-  const topRunStartIndex = getTopRunStartIndex(bottle);
-  if (coinIndex < topRunStartIndex) {
-    return false;
-  }
-
   if (bottleIndex === props.selectedBottleIndex) {
-    return true;
+    const topValue = bottle[bottle.length - 1];
+    if (topValue !== selectedTopValue) {
+      return false;
+    }
+
+    const topRunStartIndex = getTopRunStartIndex(bottle);
+    return coinIndex >= topRunStartIndex;
   }
 
-  return bottle.length < props.maxCapacity;
+  return bottle[coinIndex] === selectedTopValue;
 }
 </script>
 

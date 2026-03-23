@@ -598,7 +598,7 @@ input:-internal-autofill-selected {
   align-items: stretch;
   justify-content: space-between;
   gap: 5px;
-  margin-bottom: -2px;
+  margin-bottom: -3px;
   padding: 5px;
 }
 
@@ -700,7 +700,7 @@ table.status-bar {
 
 table.status-bar td {
   width: 33%;
-  border: 4px groove #f4e285;
+  border: 3px groove #f4e285;
   padding: 5px;
   font-size: 14px;
   line-height: 1em;
