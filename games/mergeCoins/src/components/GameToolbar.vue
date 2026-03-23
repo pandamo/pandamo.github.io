@@ -4,13 +4,14 @@ defineProps({
   canUndo: Boolean,
   busy: Boolean,
   showRestore: Boolean,
+  hidden: Boolean,
 });
 
 const emit = defineEmits(["undo", "deal", "reset", "restore"]);
 </script>
 
 <template>
-  <div class="controls pixel-panel--controls">
+  <div class="controls pixel-panel--controls" :class="{ 'controls--hidden': hidden }">
     <button
       class="pixel-action-button"
       :disabled="!canUndo || busy"

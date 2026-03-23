@@ -43,7 +43,7 @@ onMounted(async () => {
         <RouterLink class="button primary" to="/game">
           <Icon
             icon="pixelarticons:chevron-right-2"
-            width="48"
+            width="32"
             color="#fbbf24"
           />
         </RouterLink>

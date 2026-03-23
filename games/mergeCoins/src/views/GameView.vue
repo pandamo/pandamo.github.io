@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onBeforeUnmount, ref } from "vue";
 import { Icon } from "@iconify/vue/offline";
 import { useRouter } from "vue-router";
 import GameBoard from "../components/GameBoard.vue";
@@ -30,6 +30,8 @@ const showLocalSavePanel = ref(false);
 const restoreError = ref("");
 const worldRecord = ref(1);
 const showSignOutConfirm = ref(false);
+const showToolbar = ref(true);
+const lastBoardScrollTop = ref(0);
 
 const sync = useGameSync(user, gameState);
 const { syncMessage, syncIsError } = sync;
@@ -112,6 +114,21 @@ function closeSignOutConfirm() {
   showSignOutConfirm.value = false;
 }
 
+function handleBoardScroll() {
+  const currentScrollTop = document.documentElement.scrollTop;
+  const delta = currentScrollTop - lastBoardScrollTop.value;
+
+  if (currentScrollTop <= 24) {
+    showToolbar.value = true;
+  } else if (delta > 8) {
+    showToolbar.value = false;
+  } else if (delta < -8) {
+    showToolbar.value = true;
+  }
+
+  lastBoardScrollTop.value = currentScrollTop;
+}
+
 function handlePlayerNameClick() {
   playerNameTapCount.value += 1;
 
@@ -189,6 +206,12 @@ async function handleRestoreLocalSave() {
 onMounted(async () => {
   await initGame();
   showGameOver.value = gameState.isGameOver.value;
+  lastBoardScrollTop.value = document.documentElement.scrollTop;
+  window.addEventListener("scroll", handleBoardScroll, { passive: true });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", handleBoardScroll);
 });
 </script>
 
@@ -224,7 +247,6 @@ onMounted(async () => {
         </div>
       </div>
     </div>
-
     <div v-if="pageLoading" class="game-loading-screen">
       <span class="game-loading-spinner" aria-hidden="true"></span>
     </div>
@@ -260,7 +282,7 @@ onMounted(async () => {
           title="退出登录"
           @click="openSignOutConfirm"
         >
-          <Icon icon="pixelarticons:circle-power" />
+          <Icon icon="pixelarticons:logout" />
         </button>
       </div>
 
@@ -318,6 +340,7 @@ onMounted(async () => {
         :can-undo="canUndo"
         :busy="authLoading"
         :show-restore="showLocalSavePanel"
+        :hidden="!showToolbar"
         @undo="handleUndo"
         @deal="handleDeal"
         @restore="handleRestoreLocalSave"
