@@ -110,63 +110,231 @@ button {
   --pixel-size: 8px;
   position: relative;
   display: block;
+  width: calc(var(--pixel-size) * 3 + 4px);
+  height: calc(var(--pixel-size) * 3 + 4px);
   margin: auto;
+}
+
+.loading-spinner::before,
+.game-loading-spinner::before {
+  --pixel-back: rgba(255, 255, 255, 0.3);
+  --pixel-snake-head: #ffef0aff;
+  --pixel-snake-body: rgba(255, 239, 10, 0.623);
+  --pixel-snake-tail: rgba(255, 239, 10, 0.288);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
   width: var(--pixel-size);
   height: var(--pixel-size);
-  background: #f4e285;
+  background: var(--pixel-snake-head);
   box-shadow:
-    calc(var(--pixel-size) * -1) calc(var(--pixel-size) * -1) 0 #f4e285,
-    calc(var(--pixel-size) * 1) calc(var(--pixel-size) * -1) 0 #334155,
-    calc(var(--pixel-size) * -1) calc(var(--pixel-size) * 1) 0 #334155,
-    calc(var(--pixel-size) * 1) calc(var(--pixel-size) * 1) 0 #f4e285;
-  animation: pixel-loading 0.6s steps(1) infinite;
+    calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+    calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-snake-tail),
+    calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-body),
+    calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-head),
+    calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+    0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-tail),
+    0 calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-body),
+    calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-head);
+  animation: pixel-loading-snake .9s steps(1) infinite;
 }
 
 .loading-spinner {
-  --pixel-size: 8px;
+  --pixel-size: 6px;
 }
 
 .game-loading-spinner {
   --pixel-size: 8px;
 }
 
-@keyframes pixel-loading {
-  0%,
-  100% {
-    background: #f4e285;
+@keyframes pixel-loading-snake {
+
+
+
+  0% {
+    background: var(--pixel-back);
     box-shadow:
-      calc(var(--pixel-size) * -1) calc(var(--pixel-size) * -1) 0 #f4e285,
-      calc(var(--pixel-size) * 1) calc(var(--pixel-size) * -1) 0 #334155,
-      calc(var(--pixel-size) * -1) calc(var(--pixel-size) * 1) 0 #334155,
-      calc(var(--pixel-size) * 1) calc(var(--pixel-size) * 1) 0 #334155;
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
   }
 
-  25% {
-    background: #334155;
+  7% {
+    background: var(--pixel-snake-head);
     box-shadow:
-      calc(var(--pixel-size) * -1) calc(var(--pixel-size) * -1) 0 #f4e285,
-      calc(var(--pixel-size) * 1) calc(var(--pixel-size) * -1) 0 #f4e285,
-      calc(var(--pixel-size) * -1) calc(var(--pixel-size) * 1) 0 #334155,
-      calc(var(--pixel-size) * 1) calc(var(--pixel-size) * 1) 0 #334155;
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
   }
 
-  50% {
-    background: #334155;
+  14% {
+    background: var(--pixel-snake-body);
     box-shadow:
-      calc(var(--pixel-size) * -1) calc(var(--pixel-size) * -1) 0 #334155,
-      calc(var(--pixel-size) * 1) calc(var(--pixel-size) * -1) 0 #f4e285,
-      calc(var(--pixel-size) * -1) calc(var(--pixel-size) * 1) 0 #f4e285,
-      calc(var(--pixel-size) * 1) calc(var(--pixel-size) * 1) 0 #334155;
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-snake-head),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
   }
 
-  75% {
-    background: #334155;
+  21% {
+    background: var(--pixel-snake-tail);
     box-shadow:
-      calc(var(--pixel-size) * -1) calc(var(--pixel-size) * -1) 0 #334155,
-      calc(var(--pixel-size) * 1) calc(var(--pixel-size) * -1) 0 #334155,
-      calc(var(--pixel-size) * -1) calc(var(--pixel-size) * 1) 0 #f4e285,
-      calc(var(--pixel-size) * 1) calc(var(--pixel-size) * 1) 0 #f4e285;
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-snake-body),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-snake-head),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
   }
+
+  28% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-snake-tail),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-snake-body),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-head),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
+  }
+
+  35% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-snake-tail),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-body),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-head),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
+  }
+
+  42% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-tail),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-body),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-head),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
+  }
+
+  49% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-tail),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-body),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-head),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
+  }
+
+  56% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-tail),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-body),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-head),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
+  }
+
+  63% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-snake-tail),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-body),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-head);
+  }
+
+  70% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-tail),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-body);
+  }
+
+  77% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-tail),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-body);
+  }
+
+  84% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-snake-tail);
+  }
+
+  91% {
+    background: var(--pixel-back);
+    box-shadow:
+      calc(var(--pixel-size) + 2px) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) 0 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc((var(--pixel-size) + 2px) * 2) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc((var(--pixel-size) + 2px) * 2) 0 var(--pixel-back),
+      0 calc(var(--pixel-size) + 2px) 0 var(--pixel-back),
+      calc(var(--pixel-size) + 2px) calc(var(--pixel-size) + 2px) 0 var(--pixel-back);
+  }
+
+
 }
 
 .rank-list {
@@ -176,12 +344,15 @@ button {
   display: grid;
   gap: 12px;
 }
+
 .rank-list .rank-item:first-child {
   background-color: rgb(253 230 138 / 60%);
 }
+
 .rank-list .rank-item:nth-child(2) {
   background-color: rgb(253 230 138 / 40%);
 }
+
 .rank-list .rank-item:nth-child(3) {
   background-color: rgb(253 230 138 / 20%);
 }
@@ -235,6 +406,7 @@ button {
   justify-content: center;
   gap: 12px;
 }
+
 .action-bar .button {
   min-width: 150px;
   padding: 10px !important;
@@ -311,6 +483,7 @@ button {
   border: 2px groove #f4e285;
   outline: none;
 }
+
 input:-internal-autofill-selected {
   background-color: transparent !important;
   -webkit-text-fill-color: #f4e285 !important;
@@ -361,6 +534,7 @@ input:-internal-autofill-selected {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -389,6 +563,7 @@ input:-internal-autofill-selected {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -473,6 +648,7 @@ input:-internal-autofill-selected {
   color: inherit;
   cursor: pointer;
   text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .game-save-panel {
@@ -514,12 +690,14 @@ input:-internal-autofill-selected {
   padding: 5px;
   background: #111;
 }
+
 table.status-bar {
   margin-bottom: 10px;
   border-collapse: collapse;
   display: table;
   text-align: center;
 }
+
 table.status-bar td {
   width: 33%;
   border: 4px groove #f4e285;
@@ -552,9 +730,11 @@ table.status-bar td {
 .status-record {
   color: #f4e285;
 }
+
 .status-word-record {
   color: #ffc009;
 }
+
 .game-over-banner {
   margin-bottom: 16px;
   padding: 12px 14px;

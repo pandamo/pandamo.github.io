@@ -30,6 +30,7 @@ const showLocalSavePanel = ref(false);
 const restoreError = ref("");
 const worldRecord = ref(1);
 const showSignOutConfirm = ref(false);
+const showResetConfirm = ref(false);
 const showToolbar = ref(true);
 const lastBoardScrollTop = ref(0);
 
@@ -90,11 +91,23 @@ async function handleUndo() {
   await persistAfter(undone);
 }
 
-async function handleReset() {
-  const confirmed = window.confirm("确定要重置游戏吗？此操作将清除所有进度！");
-  if (!confirmed) return;
+async function confirmReset() {
   await sync.clearState();
   showGameOver.value = false;
+  showResetConfirm.value = false;
+}
+
+function openResetConfirm() {
+  showResetConfirm.value = true;
+}
+
+function closeResetConfirm() {
+  if (authLoading.value) return;
+  showResetConfirm.value = false;
+}
+
+async function handleReset() {
+  openResetConfirm();
 }
 
 async function handleSignOut() {
@@ -135,6 +148,9 @@ function handlePlayerNameClick() {
   if (playerNameTapCount.value > 20) {
     showLocalSavePanel.value = true;
   }
+  setTimeout(() => {
+    playerNameTapCount.value = 0;
+  }, 10000);
 }
 
 function isValidRestoreState(state) {
@@ -247,6 +263,35 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
+    <div
+      v-if="showResetConfirm"
+      class="signout-confirm-overlay"
+      @click.self="closeResetConfirm"
+    >
+      <div class="signout-confirm-dialog pixel-panel">
+        <div class="signout-confirm-title">确认重新开始？</div>
+        <div class="signout-confirm-text">重新开始后会清除当前进度！</div>
+        <div class="signout-confirm-actions">
+          <button
+            class="pixel-action-button"
+            type="button"
+            :disabled="authLoading"
+            @click="closeResetConfirm"
+          >
+            <Icon icon="pixelarticons:undo" width="24" />
+          </button>
+          <button
+            class="pixel-action-button pixel-action-button--danger"
+            type="button"
+            :disabled="authLoading"
+            @click="confirmReset"
+          >
+            <Icon icon="pixelarticons:check" width="24" />
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div v-if="pageLoading" class="game-loading-screen">
       <span class="game-loading-spinner" aria-hidden="true"></span>
     </div>
