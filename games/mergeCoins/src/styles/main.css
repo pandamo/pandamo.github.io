@@ -43,15 +43,19 @@ button {
 }
 
 .hero {
-  padding: 48px 20px 24px;
+  padding: 10px 20px 24px;
   text-align: center;
 }
 
 .hero h1 {
   margin: 0;
   font-size: 40px;
-  text-shadow: 3px 3px #a2945d;
-  color: #fbbf24;
+  text-shadow:
+    -1px -1px #f8bd24,
+    2px 2px #f8bd24,
+    4px 4px #f8bd24,
+    6px 6px #f8bd24;
+  color: #000000;
   font-weight: 900;
 }
 
@@ -220,7 +224,7 @@ button {
 
 .footer-actions {
   margin-top: auto;
-  padding: 24px 20px 36px;
+  padding: 0 20px 36px;
 }
 
 .action-bar {
@@ -613,7 +617,6 @@ table.status-bar td {
 
 .bottle-inner {
   display: flex;
-  flex: 1;
   flex-direction: column-reverse;
   align-items: center;
   justify-content: flex-start;
@@ -632,13 +635,13 @@ table.status-bar td {
 }
 
 .pixel-coin {
-  width: 95%;
+  width: calc(100% - 2px);
   padding: 0 0 2px;
-  margin-bottom: 0;
+  margin: 0 0 0 2px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 12px;
+  font-size: 16px;
   color: #fff;
   box-shadow:
     inset 3px -3px 0 rgba(0, 0, 0, 0.25),
