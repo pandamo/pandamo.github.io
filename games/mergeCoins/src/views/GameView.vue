@@ -275,7 +275,7 @@ onBeforeUnmount(() => {
             type="button"
             @click="handlePlayerNameClick"
           >
-            <span class="player-name">{{ playerName }}/{{ pageLoading }}</span>
+            <span class="player-name">{{ playerName }}</span>
           </button>
           <span class="sync-status" :class="{ error: syncIsError }">{{
             syncMessage
