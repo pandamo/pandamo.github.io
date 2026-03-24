@@ -10,9 +10,7 @@ const { entries, loading, errorMessage, loadLeaderboard } = useLeaderboard();
 //const loading = ref(false);
 
 onMounted(async () => {
-  //loading.value = true;
   await Promise.all([loadLeaderboard(), refreshSession()]);
-  // loading.value = false;
 });
 </script>
 

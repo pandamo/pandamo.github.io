@@ -3,6 +3,7 @@ import { computed, onMounted, onBeforeUnmount, ref } from "vue";
 import { Icon } from "@iconify/vue/offline";
 import { useRouter } from "vue-router";
 import GameBoard from "../components/GameBoard.vue";
+import GameConfirmDialog from "../components/GameConfirmDialog.vue";
 import GameToolbar from "../components/GameToolbar.vue";
 import { useAuth } from "../composables/useAuth";
 import { useGameState } from "../composables/useGameState";
@@ -50,8 +51,8 @@ const localSaveText = computed(
 async function initGame() {
   pageLoading.value = true;
   const sessionUser = await refreshSession();
-
   if (!sessionUser) {
+    pageLoading.value = false;
     router.replace("/auth");
     return;
   }
@@ -65,8 +66,8 @@ async function initGame() {
 
   worldRecord.value = await loadTopRecord();
   gameState.checkGameOver();
-  syncReady.value = true;
   pageLoading.value = false;
+  syncReady.value = true;
 }
 
 async function persistAfter(actionResult) {
@@ -142,15 +143,17 @@ function handleBoardScroll() {
   lastBoardScrollTop.value = currentScrollTop;
 }
 
+let cd;
 function handlePlayerNameClick() {
   playerNameTapCount.value += 1;
 
   if (playerNameTapCount.value > 20) {
     showLocalSavePanel.value = true;
   }
-  setTimeout(() => {
+  clearTimeout(cd);
+  cd = setTimeout(() => {
     playerNameTapCount.value = 0;
-  }, 10000);
+  }, 500);
 }
 
 function isValidRestoreState(state) {
@@ -233,64 +236,23 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="page-shell game-page">
-    <div
-      v-if="showSignOutConfirm"
-      class="signout-confirm-overlay"
-      @click.self="closeSignOutConfirm"
-    >
-      <div class="signout-confirm-dialog pixel-panel">
-        <div class="signout-confirm-title">确认退出登录？</div>
-        <div class="signout-confirm-text">
-          退出后需要重新登录才能继续云存档。
-        </div>
-        <div class="signout-confirm-actions">
-          <button
-            class="pixel-action-button"
-            type="button"
-            :disabled="authLoading"
-            @click="closeSignOutConfirm"
-          >
-            <Icon icon="pixelarticons:undo" width="24" />
-          </button>
-          <button
-            class="pixel-action-button pixel-action-button--danger"
-            type="button"
-            :disabled="authLoading"
-            @click="handleSignOut"
-          >
-            <Icon icon="pixelarticons:check" width="24" />
-          </button>
-        </div>
-      </div>
-    </div>
-    <div
-      v-if="showResetConfirm"
-      class="signout-confirm-overlay"
-      @click.self="closeResetConfirm"
-    >
-      <div class="signout-confirm-dialog pixel-panel">
-        <div class="signout-confirm-title">确认重新开始？</div>
-        <div class="signout-confirm-text">重新开始后会清除当前进度！</div>
-        <div class="signout-confirm-actions">
-          <button
-            class="pixel-action-button"
-            type="button"
-            :disabled="authLoading"
-            @click="closeResetConfirm"
-          >
-            <Icon icon="pixelarticons:undo" width="24" />
-          </button>
-          <button
-            class="pixel-action-button pixel-action-button--danger"
-            type="button"
-            :disabled="authLoading"
-            @click="confirmReset"
-          >
-            <Icon icon="pixelarticons:check" width="24" />
-          </button>
-        </div>
-      </div>
-    </div>
+    <GameConfirmDialog
+      :open="showSignOutConfirm"
+      :busy="authLoading"
+      title="确认退出登录？"
+      message="退出后需要重新登录才能继续云存档。"
+      @close="closeSignOutConfirm"
+      @confirm="handleSignOut"
+    />
+
+    <GameConfirmDialog
+      :open="showResetConfirm"
+      :busy="authLoading"
+      title="确认重新开始？"
+      message="重新开始后会清除当前进度！"
+      @close="closeResetConfirm"
+      @confirm="confirmReset"
+    />
 
     <div v-if="pageLoading" class="game-loading-screen">
       <span class="game-loading-spinner" aria-hidden="true"></span>
@@ -313,7 +275,7 @@ onBeforeUnmount(() => {
             type="button"
             @click="handlePlayerNameClick"
           >
-            <span class="player-name">{{ playerName }}</span>
+            <span class="player-name">{{ playerName }}/{{ pageLoading }}</span>
           </button>
           <span class="sync-status" :class="{ error: syncIsError }">{{
             syncMessage
