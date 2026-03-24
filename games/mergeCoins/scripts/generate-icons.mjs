@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises'
+import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -6,13 +6,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const rootDir = resolve(__dirname, '..')
 const srcDir = resolve(rootDir, 'src')
 const outputFile = resolve(srcDir, 'icons.js')
-const sourceFiles = [
-  'components/AuthForm.vue',
-  'views/GameView.vue',
-  'views/HomeView.vue',
-  'views/PaletteView.vue',
-  'components/GameToolbar.vue',
-]
+const sourceDirs = ['components', 'views']
 
 const iconPattern = /icon="([a-z0-9-]+):([a-z0-9-]+)"/gi
 
@@ -20,6 +14,36 @@ function sortObjectKeys(value) {
   return Object.fromEntries(
     Object.entries(value).sort(([left], [right]) => left.localeCompare(right)),
   )
+}
+
+async function collectVueFiles(dirPath) {
+  const entries = await readdir(dirPath, { withFileTypes: true })
+  const files = []
+
+  for (const entry of entries) {
+    const fullPath = resolve(dirPath, entry.name)
+
+    if (entry.isDirectory()) {
+      files.push(...await collectVueFiles(fullPath))
+      continue
+    }
+
+    if (entry.isFile() && entry.name.endsWith('.vue')) {
+      files.push(fullPath)
+    }
+  }
+
+  return files
+}
+
+async function getSourceFiles() {
+  const files = []
+
+  for (const dir of sourceDirs) {
+    files.push(...await collectVueFiles(resolve(srcDir, dir)))
+  }
+
+  return files.sort((left, right) => left.localeCompare(right))
 }
 
 function buildCollectionCode(prefix, collection) {
@@ -48,9 +72,9 @@ function buildCollectionCode(prefix, collection) {
 
 async function loadUsedIcons() {
   const usedIcons = new Map()
+  const sourceFiles = await getSourceFiles()
 
-  for (const relativePath of sourceFiles) {
-    const filePath = resolve(srcDir, relativePath)
+  for (const filePath of sourceFiles) {
     const content = await readFile(filePath, 'utf8')
 
     for (const match of content.matchAll(iconPattern)) {

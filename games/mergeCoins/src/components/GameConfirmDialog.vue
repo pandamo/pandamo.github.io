@@ -18,11 +18,7 @@ const emit = defineEmits(["close", "confirm"]);
 </script>
 
 <template>
-  <div
-    v-if="open"
-    class="confirm-dialog-overlay"
-    @click.self="emit('close')"
-  >
+  <div v-if="open" class="confirm-dialog-overlay" @click.self="emit('close')">
     <div class="confirm-dialog pixel-panel">
       <div class="confirm-dialog-title">{{ title }}</div>
       <div class="confirm-dialog-text">{{ message }}</div>
