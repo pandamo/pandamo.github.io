@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref } from "vue";
+import { computed, onMounted, onBeforeUnmount, ref, watch } from "vue";
 import { Icon } from "@iconify/vue/offline";
 import { useRouter } from "vue-router";
 import GameBoard from "../components/GameBoard.vue";
@@ -29,6 +29,7 @@ const showGameOver = ref(false);
 const playerNameTapCount = ref(0);
 const showLocalSavePanel = ref(false);
 const restoreError = ref("");
+const localSaveInput = ref("");
 const worldRecord = ref(1);
 const showSignOutConfirm = ref(false);
 const showResetConfirm = ref(false);
@@ -46,6 +47,14 @@ const playerName = computed(() => {
 
 const localSaveText = computed(
   () => localStorage.getItem(sync.storageKey) || "",
+);
+
+watch(
+  localSaveText,
+  (value) => {
+    localSaveInput.value = value;
+  },
+  { immediate: true },
 );
 
 async function initGame() {
@@ -201,7 +210,7 @@ async function handleRestoreLocalSave() {
   restoreError.value = "";
 
   try {
-    const rawSave = localSaveText.value;
+    const rawSave = localSaveInput.value.trim();
     if (!rawSave) {
       restoreError.value = "没有可恢复的本地记录。";
       return;
@@ -302,12 +311,7 @@ onBeforeUnmount(() => {
           <strong>gameSave</strong>
           <span v-if="restoreError">{{ restoreError }}</span>
         </div>
-        <textarea
-          class="game-save-output"
-          readonly
-          :value="localSaveText"
-          @focus="$event.target.select()"
-        />
+        <textarea class="game-save-output" v-model="localSaveInput" />
       </div>
 
       <table class="status-bar">

@@ -653,7 +653,7 @@ input:-internal-autofill-selected {
 }
 
 .game-save-panel {
-  margin: 0 0 10px;
+  margin: 10px 0 10px;
 }
 
 .game-save-header {

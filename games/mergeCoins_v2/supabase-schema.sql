@@ -78,3 +78,7 @@ from public.game_saves gs
 join public.profiles p on p.id = gs.user_id;
 
 grant select on public.leaderboard_entries to anon, authenticated;
+
+
+
+
