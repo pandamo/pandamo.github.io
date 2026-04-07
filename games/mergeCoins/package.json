@@ -19,6 +19,6 @@
     "@iconify-json/pixelarticons": "^1.2.4",
     "@iconify-json/solar": "^1.2.5",
     "@vitejs/plugin-vue": "^5.2.1",
-    "vite": "^6.2.2"
+    "vite": "^6.4.2"
   }
 }
