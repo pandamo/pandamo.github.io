@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>convert</title>
+  <script src='//cdn.bootcss.com/axios/0.18.0/axios.min.js'></script>
+  <script src='//cdn.bootcss.com/vue/2.5.16/vue.min.js'></script>
+  <style>
+    textarea {
+      height: 1px;width: 1px;opacity: 0;
+    }
+
+    .code {
+      margin: 10px;
+      border: 1px solid #999;
+      padding: 10px;
+      font-size: 11px;
+      max-height: 300px;overflow: auto;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="convert">
+     
+    调用接口状态：{{loaded}}
+    <div class='code' id='apilData'>{{sondList}}</div>
+    <button  @click='copy(sondList)'>copy</button>
+    <textarea type="text" id='temp'></textarea>
+  </div>
+  <script>
+     new Vue({
+      el: '#convert',
+      data() {
+        return {
+          sondList: null,
+          //sondListLocal: null,
+          //api: 'https://bird.ioliu.cn/netease/playlist?id=',
+          api: 'https://netease-cloud-music-api-alpha-puce.vercel.app/playlist/track/all?id=',
+          songListId: 53208352,
+          loaded: '加载中'
+        }
+      },
+      computed: {
+        loadState() {
+          return this.loaded === true ? '加载完成' : ''
+        }
+      },
+      methods: {
+        copy(text) {
+          console.log(text);
+          
+          var input = document.getElementById('temp'); // 获取隐藏input的dom
+          input.value = text; // 修改文本框的内容
+          input.select(); // 选中文本
+          document.execCommand("copy"); // 执行浏览器复制命令
+          alert("复制成功");
+        },
+        formatList(list) {
+          let _list = list.map((v, i) => {
+            const {
+              id,
+              name,
+              al,
+              dt,
+              ar
+            } = v //al专辑信息，dt歌曲时长,ar作者
+            let _ar = ar.map((p) => {
+              return {
+                name: p.name
+              }
+            })           
+            return {
+              id: id,
+              name: name,
+              cover: al.picUrl,
+              length: dt,
+              artist: _ar,
+              album: al.name
+            }
+          })
+          return _list
+
+        },
+        getProxyApi() {
+          axios.get(this.api + this.songListId, {
+            timeout: 15000
+          }).then((resp) => {
+            this.loaded = '完毕'
+            this.sondList = JSON.stringify(this.formatList(resp.data.songs))
+          })
+        },
+        getLocalList() {
+          //打开 https://music.163.com/#/my/m/music/playlist?id=53208352 获取数据然后写入music163.src.json
+          axios.get('music163.src.json').then((data) => {
+            this.sondListLocal = JSON.stringify(this.formatList(data.data.playlist.tracks))
+          })
+        }
+      },
+      mounted() {
+        this.getProxyApi()
+        //this.getLocalList()
+      }
+    })
+
+  </script>
+</body>
+
+</html>

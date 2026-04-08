@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>SVG 转 Data URI 工具</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: rgba(255, 255, 255, 0.08);
+        --panel-solid: #11182b;
+        --panel-light: #18213a;
+        --text: #e8edf7;
+        --muted: #9aa7bd;
+        --primary: #4da3ff;
+        --primary-hover: #2c8fff;
+        --success: #22c55e;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --border: rgba(255, 255, 255, 0.12);
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        --radius: 16px;
+        --radius-sm: 12px;
+        --code-bg: #0b1220;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        font-family:
+          Inter,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          "PingFang SC",
+          "Hiragino Sans GB",
+          "Microsoft YaHei",
+          sans-serif;
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(77, 163, 255, 0.18),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(34, 197, 94, 0.1),
+            transparent 25%
+          ),
+          linear-gradient(180deg, #0a0f1d, #0f172a 55%, #09111f);
+        color: var(--text);
+      }
+
+      .page {
+        width: min(1280px, 94%);
+        margin: 0 auto;
+        padding: 28px 0 40px;
+      }
+
+      .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 24px;
+      }
+
+      .hero-left h1 {
+        margin: 0 0 8px;
+        font-size: clamp(28px, 4vw, 40px);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+
+      .hero-left p {
+        margin: 0;
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .badge {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 12px;
+        color: #dbe7ff;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .segment {
+        display: inline-flex;
+        padding: 4px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border);
+      }
+
+      .segment input {
+        display: none;
+      }
+
+      .segment label {
+        padding: 10px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        color: var(--muted);
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+
+      .segment input:checked + label {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(77, 163, 255, 0.25);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 20px;
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+        overflow: hidden;
+      }
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .panel-title {
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .panel-subtitle {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .panel-body {
+        padding: 18px 20px 20px;
+      }
+
+      .dropzone {
+        position: relative;
+        border: 1.5px dashed rgba(77, 163, 255, 0.45);
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 16px;
+        background: linear-gradient(
+          180deg,
+          rgba(77, 163, 255, 0.08),
+          rgba(255, 255, 255, 0.03)
+        );
+        transition: all 0.2s ease;
+      }
+
+      .dropzone.dragover {
+        border-color: var(--primary);
+        background: rgba(77, 163, 255, 0.12);
+        box-shadow: inset 0 0 0 1px rgba(77, 163, 255, 0.25);
+      }
+
+      .dropzone-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+
+      .dropzone-title {
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .dropzone-desc {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 380px;
+        resize: vertical;
+        border: 1px solid var(--border);
+        background: rgba(7, 13, 27, 0.65);
+        color: #f3f7ff;
+        border-radius: 14px;
+        padding: 16px;
+        line-height: 1.65;
+        font-size: 14px;
+        outline: none;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      textarea:focus {
+        border-color: rgba(77, 163, 255, 0.7);
+        box-shadow: 0 0 0 4px rgba(77, 163, 255, 0.15);
+      }
+
+      textarea::placeholder {
+        color: #7d8aa2;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      button {
+        height: 42px;
+        padding: 0 16px;
+        border-radius: 12px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.18s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(180deg, #56adff, #2f8fff);
+        color: white;
+        box-shadow: 0 8px 18px rgba(47, 143, 255, 0.28);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.03);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text);
+        border-color: var(--border);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .btn-danger {
+        background: rgba(239, 68, 68, 0.12);
+        color: #fecaca;
+        border-color: rgba(239, 68, 68, 0.18);
+      }
+
+      .btn-danger:hover {
+        background: rgba(239, 68, 68, 0.18);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .stat-card {
+        padding: 14px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+      }
+
+      .stat-label {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .stat-value {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .preview-box {
+        min-height: 240px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background:
+          linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.03) 25%,
+            transparent 25%,
+            transparent 75%,
+            rgba(255, 255, 255, 0.03) 75%
+          ),
+          linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.03) 25%,
+            transparent 25%,
+            transparent 75%,
+            rgba(255, 255, 255, 0.03) 75%
+          ),
+          rgba(255, 255, 255, 0.03);
+        background-size: 24px 24px;
+        background-position:
+          0 0,
+          12px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        overflow: hidden;
+        margin-bottom: 16px;
+      }
+
+      .preview-box img {
+        max-width: 100%;
+        max-height: 260px;
+        display: none;
+        filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.2));
+      }
+
+      .preview-empty {
+        color: var(--muted);
+        font-size: 14px;
+        text-align: center;
+        line-height: 1.7;
+      }
+
+      .output-tools {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .code-tip {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+        margin-top: 10px;
+      }
+
+      .status {
+        min-height: 22px;
+        margin-top: 12px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .status.success {
+        color: var(--success);
+      }
+
+      .status.error {
+        color: var(--danger);
+      }
+
+      .status.warning {
+        color: var(--warning);
+      }
+
+      .footer-note {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        color: #dce8ff;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+
+      @media (max-width: 980px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        textarea {
+          min-height: 300px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .hero {
+          flex-direction: column;
+        }
+
+        .toolbar {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .panel-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="hero-left">
+          <h1>SVG 转 Data URI 工具</h1>
+          <p>
+            将 SVG 源码快速转换为可直接用于 <code>img src</code>、 CSS
+            <code>background-image</code>、前端资源内联的 Data URI。 支持 Tiny
+            Data URI 和 Base64 两种输出格式。
+          </p>
+          <div class="hero-badges">
+            <span class="badge">实时转换</span>
+            <span class="badge">拖拽上传 SVG</span>
+            <span class="badge">支持 CSS 复制</span>
+            <span class="badge">预览与长度统计</span>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="segment" role="tablist" aria-label="输出模式">
+            <input
+              type="radio"
+              name="mode"
+              id="modeTiny"
+              value="tiny"
+              checked
+            />
+            <label for="modeTiny">Tiny Data URI</label>
+
+            <input type="radio" name="mode" id="modeBase64" value="base64" />
+            <label for="modeBase64">Base64</label>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">输入 SVG</div>
+              <div class="panel-subtitle">支持粘贴源码或拖入 .svg 文件</div>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="dropzone" id="dropzone">
+              <div class="dropzone-top">
+                <div>
+                  <div class="dropzone-title">拖拽上传 SVG 文件</div>
+                  <div class="dropzone-desc">
+                    或直接在下方文本框中粘贴 SVG 代码，工具会自动转换。
+                  </div>
+                </div>
+                <button type="button" class="btn-secondary" id="pasteDemoBtn">
+                  填入示例
+                </button>
+              </div>
+
+              <textarea
+                id="source"
+                spellcheck="false"
+                placeholder='例如：<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">...</svg>'
+              ></textarea>
+            </div>
+
+            <div class="actions">
+              <button type="button" class="btn-primary" id="convertBtn">
+                立即转换
+              </button>
+              <button type="button" class="btn-secondary" id="formatBtn">
+                压缩空白
+              </button>
+              <button type="button" class="btn-danger" id="clearBtn">
+                清空内容
+              </button>
+            </div>
+
+            <div id="status" class="status" aria-live="polite"></div>
+
+            <div class="footer-note">
+              提示：如果只是用于网页内联，一般推荐
+              <strong>Tiny Data URI</strong>， 它通常比 Base64
+              更短；如果你需要更通用的编码形式，可以切换到
+              <strong>Base64</strong>。
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">输出结果与预览</div>
+              <div class="panel-subtitle">
+                支持复制 Data URI 与 CSS 背景代码
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="stats">
+              <div class="stat-card">
+                <div class="stat-label">原始长度</div>
+                <div class="stat-value" id="sourceLen">0</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">输出长度</div>
+                <div class="stat-value" id="targetLen">0</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">压缩比例</div>
+                <div class="stat-value" id="ratio">0%</div>
+              </div>
+            </div>
+
+            <div class="preview-box">
+              <img id="imgPreview" alt="SVG 预览" />
+              <div class="preview-empty" id="previewEmpty">
+                暂无预览<br />
+                转换成功后会在这里显示图像
+              </div>
+            </div>
+
+            <div class="output-tools">
+              <button type="button" class="btn-primary" id="copyBtn">
+                复制 Data URI
+              </button>
+              <button type="button" class="btn-secondary" id="copyCssBtn">
+                复制 CSS background-image
+              </button>
+            </div>
+
+            <textarea
+              id="target"
+              readonly
+              spellcheck="false"
+              placeholder="转换结果会显示在这里"
+            ></textarea>
+
+            <div class="code-tip">
+              CSS 示例：
+              <code>background-image: url("data:image/svg+xml,...");</code>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const REGEX = {
+        whitespace: /\s+/g,
+        urlHexPairs: /%[\dA-F]{2}/g,
+        quotes: /"/g,
+      };
+
+      const shorterNames = {
+        aqua: /#00ffff(ff)?(?!\w)|#0ff(f)?(?!\w)/gi,
+        azure: /#f0ffff(ff)?(?!\w)/gi,
+        beige: /#f5f5dc(ff)?(?!\w)/gi,
+        bisque: /#ffe4c4(ff)?(?!\w)/gi,
+        black: /#000000(ff)?(?!\w)|#000(f)?(?!\w)/gi,
+        blue: /#0000ff(ff)?(?!\w)|#00f(f)?(?!\w)/gi,
+        brown: /#a52a2a(ff)?(?!\w)/gi,
+        coral: /#ff7f50(ff)?(?!\w)/gi,
+        cornsilk: /#fff8dc(ff)?(?!\w)/gi,
+        crimson: /#dc143c(ff)?(?!\w)/gi,
+        cyan: /#00ffff(ff)?(?!\w)|#0ff(f)?(?!\w)/gi,
+        darkblue: /#00008b(ff)?(?!\w)/gi,
+        darkcyan: /#008b8b(ff)?(?!\w)/gi,
+        darkgrey: /#a9a9a9(ff)?(?!\w)/gi,
+        darkred: /#8b0000(ff)?(?!\w)/gi,
+        deeppink: /#ff1493(ff)?(?!\w)/gi,
+        dimgrey: /#696969(ff)?(?!\w)/gi,
+        gold: /#ffd700(ff)?(?!\w)/gi,
+        green: /#008000(ff)?(?!\w)/gi,
+        grey: /#808080(ff)?(?!\w)/gi,
+        honeydew: /#f0fff0(ff)?(?!\w)/gi,
+        hotpink: /#ff69b4(ff)?(?!\w)/gi,
+        indigo: /#4b0082(ff)?(?!\w)/gi,
+        ivory: /#fffff0(ff)?(?!\w)/gi,
+        khaki: /#f0e68c(ff)?(?!\w)/gi,
+        lavender: /#e6e6fa(ff)?(?!\w)/gi,
+        lime: /#00ff00(ff)?(?!\w)|#0f0(f)?(?!\w)/gi,
+        linen: /#faf0e6(ff)?(?!\w)/gi,
+        maroon: /#800000(ff)?(?!\w)/gi,
+        moccasin: /#ffe4b5(ff)?(?!\w)/gi,
+        navy: /#000080(ff)?(?!\w)/gi,
+        oldlace: /#fdf5e6(ff)?(?!\w)/gi,
+        olive: /#808000(ff)?(?!\w)/gi,
+        orange: /#ffa500(ff)?(?!\w)/gi,
+        orchid: /#da70d6(ff)?(?!\w)/gi,
+        peru: /#cd853f(ff)?(?!\w)/gi,
+        pink: /#ffc0cb(ff)?(?!\w)/gi,
+        plum: /#dda0dd(ff)?(?!\w)/gi,
+        purple: /#800080(ff)?(?!\w)/gi,
+        red: /#ff0000(ff)?(?!\w)|#f00(f)?(?!\w)/gi,
+        salmon: /#fa8072(ff)?(?!\w)/gi,
+        seagreen: /#2e8b57(ff)?(?!\w)/gi,
+        seashell: /#fff5ee(ff)?(?!\w)/gi,
+        sienna: /#a0522d(ff)?(?!\w)/gi,
+        silver: /#c0c0c0(ff)?(?!\w)/gi,
+        skyblue: /#87ceeb(ff)?(?!\w)/gi,
+        snow: /#fffafa(ff)?(?!\w)/gi,
+        tan: /#d2b48c(ff)?(?!\w)/gi,
+        teal: /#008080(ff)?(?!\w)/gi,
+        thistle: /#d8bfd8(ff)?(?!\w)/gi,
+        tomato: /#ff6347(ff)?(?!\w)/gi,
+        violet: /#ee82ee(ff)?(?!\w)/gi,
+        wheat: /#f5deb3(ff)?(?!\w)/gi,
+        white: /#ffffff(ff)?(?!\w)|#fff(f)?(?!\w)/gi,
+      };
+
+      const $ = (id) => document.getElementById(id);
+
+      const sourceEl = $("source");
+      const targetEl = $("target");
+      const statusEl = $("status");
+      const dropzoneEl = $("dropzone");
+      const imgPreviewEl = $("imgPreview");
+      const previewEmptyEl = $("previewEmpty");
+
+      const sourceLenEl = $("sourceLen");
+      const targetLenEl = $("targetLen");
+      const ratioEl = $("ratio");
+
+      const convertBtn = $("convertBtn");
+      const formatBtn = $("formatBtn");
+      const clearBtn = $("clearBtn");
+      const copyBtn = $("copyBtn");
+      const copyCssBtn = $("copyCssBtn");
+      const pasteDemoBtn = $("pasteDemoBtn");
+
+      function getMode() {
+        const checked = document.querySelector('input[name="mode"]:checked');
+        return checked?.value || "tiny";
+      }
+
+      function setStatus(message = "", type = "") {
+        statusEl.textContent = message;
+        statusEl.className = `status ${type}`.trim();
+      }
+
+      function collapseWhitespace(str) {
+        return str.trim().replace(REGEX.whitespace, " ");
+      }
+
+      function specialHexEncode(match) {
+        switch (match) {
+          case "%20":
+            return " ";
+          case "%3D":
+            return "=";
+          case "%3A":
+            return ":";
+          case "%2F":
+            return "/";
+          default:
+            return match.toLowerCase();
+        }
+      }
+
+      function dataURIPayload(str) {
+        return encodeURIComponent(str).replace(
+          REGEX.urlHexPairs,
+          specialHexEncode,
+        );
+      }
+
+      function colorCodeToShorterNames(str) {
+        for (const [name, pattern] of Object.entries(shorterNames)) {
+          if (pattern.test(str)) {
+            str = str.replace(pattern, name);
+          }
+        }
+        return str;
+      }
+
+      function optimizeSvg(svgString) {
+        let svg = svgString.trim();
+
+        if (svg.charCodeAt(0) === 0xfeff) {
+          svg = svg.slice(1);
+        }
+
+        // 移除 XML 声明和注释，避免使用可能引起解析问题的正则表达式
+        const xmlDeclPattern = /<\?xml[^>]*\?>/gi;
+        const commentPattern = /<\!--[\s\S]*?-->/g;
+        svg = svg
+          .replace(xmlDeclPattern, "")
+          .replace(commentPattern, "")
+          .trim();
+
+        svg = colorCodeToShorterNames(collapseWhitespace(svg)).replace(
+          REGEX.quotes,
+          "'",
+        );
+        return svg;
+      }
+
+      function svgToTinyDataUri(svgString) {
+        if (typeof svgString !== "string") {
+          throw new TypeError(
+            `Expected a string, but received ${typeof svgString}`,
+          );
+        }
+
+        const body = optimizeSvg(svgString);
+        return body ? "data:image/svg+xml," + dataURIPayload(body) : "";
+      }
+
+      function svgToBase64DataUri(svgString) {
+        if (typeof svgString !== "string") {
+          throw new TypeError(
+            `Expected a string, but received ${typeof svgString}`,
+          );
+        }
+
+        const body = optimizeSvg(svgString);
+        return body
+          ? "data:image/svg+xml;base64," +
+              btoa(unescape(encodeURIComponent(body)))
+          : "";
+      }
+
+      function isLikelySvg(content) {
+        // 限制内容长度防止 DoS
+        if (!content || content.length > 10000000) return false;
+        // 优化正则表达式避免回溯
+        const hasSvgStart =
+          /<svg\s/i.test(content) && content.indexOf(">") !== -1;
+        const hasSvgEnd =
+          content.includes("</svg>") || /\/\s*>\s*$/.test(content);
+        return hasSvgStart && hasSvgEnd;
+      }
+
+      function updatePreview(dataUri) {
+        if (!dataUri) {
+          imgPreviewEl.style.display = "none";
+          imgPreviewEl.removeAttribute("src");
+          previewEmptyEl.style.display = "block";
+          return;
+        }
+
+        // 清除之前的错误处理
+        imgPreviewEl.onerror = null;
+
+        // 设置新的错误处理
+        imgPreviewEl.onerror = () => {
+          imgPreviewEl.style.display = "none";
+          previewEmptyEl.style.display = "block";
+          setStatus("预览失败，SVG 可能存在错误。", "error");
+        };
+
+        imgPreviewEl.src = dataUri;
+        imgPreviewEl.style.display = "block";
+        previewEmptyEl.style.display = "none";
+      }
+
+      function updateStats(source, target) {
+        const sourceLen = source ? source.length : 0;
+        const targetLen = target ? target.length : 0;
+
+        sourceLenEl.textContent = sourceLen.toLocaleString();
+        targetLenEl.textContent = targetLen.toLocaleString();
+
+        if (!sourceLen || !targetLen) {
+          ratioEl.textContent = "0%";
+          return;
+        }
+
+        const percent = ((targetLen - sourceLen) / sourceLen) * 100;
+        const formatted = `${percent >= 0 ? "+" : ""}${percent.toFixed(1)}%`;
+        ratioEl.textContent = formatted;
+      }
+
+      function convert() {
+        const source = sourceEl.value.trim();
+
+        if (!source) {
+          targetEl.value = "";
+          updatePreview("");
+          updateStats("", "");
+          setStatus("请输入 SVG 源码，或拖入 SVG 文件。", "warning");
+          return;
+        }
+
+        if (!isLikelySvg(source)) {
+          targetEl.value = "";
+          updatePreview("");
+          updateStats(source, "");
+          setStatus("输入内容不是有效的 SVG 代码。", "error");
+          return;
+        }
+
+        try {
+          const mode = getMode();
+          const output =
+            mode === "base64"
+              ? svgToBase64DataUri(source)
+              : svgToTinyDataUri(source);
+
+          targetEl.value = output;
+          updatePreview(output);
+          updateStats(source, output);
+          setStatus(
+            `转换成功，当前模式：${mode === "base64" ? "Base64" : "Tiny Data URI"}`,
+            "success",
+          );
+        } catch (error) {
+          targetEl.value = "";
+          updatePreview("");
+          updateStats(source, "");
+          setStatus(`转换失败：${error.message}`, "error");
+        }
+      }
+
+      function compressOnly() {
+        const source = sourceEl.value.trim();
+        if (!source) {
+          setStatus("没有可压缩的 SVG 内容。", "warning");
+          return;
+        }
+
+        if (!isLikelySvg(source)) {
+          setStatus("当前内容不是 SVG，无法压缩。", "error");
+          return;
+        }
+
+        try {
+          sourceEl.value = optimizeSvg(source);
+          convert();
+          setStatus("已压缩空白并更新结果。", "success");
+        } catch (error) {
+          setStatus(`压缩失败：${error.message}`, "error");
+        }
+      }
+
+      async function copyText(text, successMessage) {
+        if (!text) {
+          setStatus("没有可复制的内容。", "warning");
+          return;
+        }
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            targetEl.focus();
+            targetEl.select();
+            document.execCommand("copy");
+          }
+          setStatus(successMessage, "success");
+        } catch (error) {
+          setStatus("复制失败，请手动复制。", "error");
+        }
+      }
+
+      function copyDataUri() {
+        copyText(targetEl.value.trim(), "已复制 Data URI。");
+      }
+
+      function copyCssCode() {
+        const value = targetEl.value.trim();
+        if (!value) {
+          setStatus("请先完成转换。", "warning");
+          return;
+        }
+        const css = `background-image: url("${value}");`;
+        copyText(css, "已复制 CSS background-image 代码。");
+      }
+
+      function clearAll() {
+        sourceEl.value = "";
+        targetEl.value = "";
+        updatePreview("");
+        updateStats("", "");
+        setStatus("");
+        sourceEl.focus();
+      }
+
+      function fillDemo() {
+        sourceEl.value = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#4da3ff"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="24" fill="url(#g)"/>
+  <circle cx="60" cy="60" r="26" fill="#fff"/>
+  <path d="M60 42v36M42 60h36" stroke="#0f172a" stroke-width="8" stroke-linecap="round"/>
+</svg>`;
+        convert();
+      }
+
+      // 限制最大文件大小为 5MB
+      const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+      async function handleDrop(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        dropzoneEl.classList.remove("dragover");
+
+        const file = event.dataTransfer?.files?.[0];
+        if (!file) return;
+
+        const isSvgFile =
+          file.type === "image/svg+xml" ||
+          file.name.toLowerCase().endsWith(".svg");
+
+        if (!isSvgFile) {
+          setStatus("只支持 SVG 文件。", "error");
+          return;
+        }
+
+        // 检查文件大小
+        if (file.size > MAX_FILE_SIZE) {
+          setStatus(
+            `文件过大，最大支持 ${MAX_FILE_SIZE / 1024 / 1024}MB。`,
+            "error",
+          );
+          return;
+        }
+
+        try {
+          const text = await file.text();
+          sourceEl.value = text;
+          convert();
+        } catch (error) {
+          setStatus("读取 SVG 文件失败。", "error");
+        }
+      }
+
+      function debounce(fn, delay = 250) {
+        let timer = null;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn(...args), delay);
+        };
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const debouncedConvert = debounce(convert, 250);
+
+        sourceEl.addEventListener("input", debouncedConvert);
+        convertBtn.addEventListener("click", convert);
+        formatBtn.addEventListener("click", compressOnly);
+        clearBtn.addEventListener("click", clearAll);
+        copyBtn.addEventListener("click", copyDataUri);
+        copyCssBtn.addEventListener("click", copyCssCode);
+        pasteDemoBtn.addEventListener("click", fillDemo);
+
+        document.querySelectorAll('input[name="mode"]').forEach((radio) => {
+          radio.addEventListener("change", convert);
+        });
+
+        dropzoneEl.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          dropzoneEl.classList.add("dragover");
+        });
+
+        dropzoneEl.addEventListener("dragleave", () => {
+          dropzoneEl.classList.remove("dragover");
+        });
+
+        dropzoneEl.addEventListener("drop", handleDrop);
+
+        document.addEventListener("dragover", (e) => e.preventDefault());
+        document.addEventListener("drop", (e) => e.preventDefault());
+
+        setStatus("准备就绪，可直接粘贴 SVG 或拖入文件。", "success");
+      });
+    </script>
+  </body>
+</html>
