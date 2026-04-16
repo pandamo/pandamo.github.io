@@ -199,7 +199,7 @@
       return list.map((item) => ({
         id: item.id,
         name: item.name,
-        cover: item.al && item.al.picUrl ? item.al.picUrl : '',
+        cover: item.al && item.al.picUrl ? item.al.picUrl.replace('http:', '') : '',
         length: item.dt,
         artist: Array.isArray(item.ar) ? item.ar.map((artistItem) => ({
           name: artistItem.name
