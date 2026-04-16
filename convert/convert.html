@@ -146,9 +146,9 @@
   <div class="page">
     <header class="header">
       <h1 class="title">网易云音乐歌单转化</h1>
-      <p class="desc">上方粘贴源数据，下方左边显示现有转换结果，右边显示 fee 不等于 1 的数据。</p>
+      <p class="desc">上方粘贴源数据，下方左边显示现有转换结果，右边显示 fee 不等于 1 的数据（过滤vip歌曲）。</p>
       <p class="desc">
-        登录网易云后，播放列表页面按 F12 打开开发者工具，切换到 Network（网络）标签，找到https://music.163.com/weapi/v6/playlist/detail?csrf_token=xxxxx， 复制playlist.tracks字段内容，粘贴在左边。
+        登录网易云后，播放列表页面按 F12 打开开发者工具，模拟成手机，切换到 Network（网络）标签，找到https://music.163.com/weapi/v6/playlist/detail?csrf_token=xxxxx， 复制playlist.tracks字段内容，粘贴在左边。
       </p>
     </header>
 
@@ -172,7 +172,7 @@
 
         <section class="panel resultPanel">
           <div class="panelHeader">
-            <h2 class="panelTitle">fee 不等于 1 的数据</h2>
+            <h2 class="panelTitle">fee 不等于 1 的数据（过滤vip歌曲）</h2>
             <span class="panelMeta">实时筛选</span>
           </div>
           <textarea id="nonVipOutput" class="editor" spellcheck="false" readonly placeholder="fee 不等于 1 的原始数据会显示在这里"></textarea>
