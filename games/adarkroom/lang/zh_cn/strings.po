@@ -254,6 +254,62 @@ msgstr "github"
 msgid "Export / Import"
 msgstr "导出/导入"
 
+#: script/engine.js
+msgid "save your game to the cloud, or restore it from the cloud."
+msgstr "将游戏存档保存到云端，或从云端恢复。"
+
+#: script/engine.js
+msgid "you will get a 12-letter save key. it is the only way to restore, so keep it safe."
+msgstr "你将获得一个 12 位字母的存档密钥，这是恢复存档的唯一凭证，请妥善保管。"
+
+#: script/engine.js
+msgid "save to cloud"
+msgstr "保存到云端"
+
+#: script/engine.js
+msgid "restore from cloud"
+msgstr "从云端恢复"
+
+#: script/engine.js
+msgid "export / import code"
+msgstr "导出/导入代码"
+
+#: script/engine.js
+msgid "your save key (12 lowercase letters):"
+msgstr "你的存档密钥（12 位小写字母）："
+
+#: script/engine.js
+msgid "keep it safe. anyone with this key can restore your save."
+msgstr "请妥善保管。任何人获得此密钥都能恢复你的存档。"
+
+#: script/engine.js
+msgid "copy"
+msgstr "复制"
+
+#: script/engine.js
+msgid "enter your 12-letter save key."
+msgstr "输入你的 12 位存档密钥。"
+
+#: script/engine.js
+msgid "restore"
+msgstr "恢复"
+
+#: script/engine.js
+msgid "the save key must be exactly 12 lowercase letters."
+msgstr "存档密钥必须是恰好 12 位小写字母。"
+
+#: script/engine.js
+msgid "error while saving to the cloud. please check your connection and try again."
+msgstr "保存到云端出错，请检查网络连接后重试。"
+
+#: script/engine.js
+msgid "error while restoring. please check the key and your connection."
+msgstr "恢复存档出错，请检查密钥和网络连接。"
+
+#: script/engine.js
+msgid "retry"
+msgstr "重试"
+
 #: script/engine.js:272
 msgid "export or import save data, for backing up"
 msgstr "导出或导入存档文件，用于备份"
@@ -815,6 +871,10 @@ msgstr "罗盘指向:"
 #: script/path.js:102
 msgid "perks:"
 msgstr "能力:"
+
+#: script/path.js:104
+msgid "perks"
+msgstr "能力"
 
 #: script/path.js:132
 msgid "none"

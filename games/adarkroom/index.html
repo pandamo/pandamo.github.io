@@ -40,6 +40,10 @@
 				lang = localStorage.lang;
 			} catch (e) { }
 		}
+		// if nothing was requested, default to simplified chinese
+		if (!lang) {
+			lang = 'zh_cn';
+		}
 		// if a language different than english requested, load all translations
 		if (lang && lang != 'en') {
 			document.write('<script src="lang/' + lang + '/strings.js"><\/script>');

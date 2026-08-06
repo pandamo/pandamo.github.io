@@ -2557,6 +2557,10 @@ msgstr "kabaca yapılmış muska"
 msgid "A Silent Forest"
 msgstr "Sessiz bir Orman"
 
+#: ../../script/path.js:29 ../../script/path.js:318
+msgid "A Dusty Path"
+msgstr "Tozlu bir yol"
+
 #: ../../script/outside.js:169
 msgid "gather wood"
 msgstr "odun kes"

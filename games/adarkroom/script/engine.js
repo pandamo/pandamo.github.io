@@ -144,7 +144,7 @@
 
       $('<span>')
         .addClass('volume menuBtn')
-        .text(_('sound on.'))
+        .text('🔊')
         .click(() => Engine.toggleVolume())
         .appendTo(menu);
 
@@ -312,7 +312,12 @@
               'save': {
                 text: _('save to cloud'),
                 onChoose: function () {
-                  CloudSave.saveGame(function (err) {
+                  CloudSave.saveGame(function (err, key) {
+                    if (!err && key) {
+                      // the scene object was built before the key existed, so
+                      // set the value right before it gets rendered
+                      Events.activeEvent().scenes['saved'].textarea = key;
+                    }
                     Events.loadScene(err ? 'saveFail' : 'saved');
                   });
                 }
@@ -936,11 +941,11 @@
         enabled = !$SM.get('config.soundOn');
       }
       if (!enabled) {
-        $('.volume').text(_('sound on.'));
+        $('.volume').text('🔊');
         $SM.set('config.soundOn', false);
         AudioEngine.setMasterVolume(0.0);
       } else {
-        $('.volume').text(_('sound off.'));
+        $('.volume').text('🔇');
         $SM.set('config.soundOn', true);
         AudioEngine.setMasterVolume(1.0);
       }

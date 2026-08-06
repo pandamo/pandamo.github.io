@@ -58,12 +58,14 @@ div#saveNotify {
 div#content {
 	position: relative;
 	overflow: hidden;
-	height: 700px;
+	height: 93vh;
 }
 
 div#header {
 	padding-bottom: 20px;
-	height: 20px;
+	height: 8px;
+	border-bottom: 1px solid #000;
+	margin-bottom: 30px;
 }
 
 .logo {
@@ -118,7 +120,7 @@ span.customSelectOptions {
 }
 
 .customSelectOptions>ul:hover {
-	max-height: 600px;
+	max-height: 640px;
 }
 
 .customSelectOptions>ul>li {
@@ -151,26 +153,20 @@ span.customSelectOptions {
 div.headerButton {
 	font-size: 17px;
 	cursor: pointer;
-	float: left;
-	border-left: 1px solid black;
-	margin-left: 10px;
-	padding-left: 10px;
+	display: inline-block;
+	padding: 3px 10px;
+	border: 1px solid transparent;
 }
 
-div.headerButton:hover {
-	text-decoration: underline;
-}
+div.headerButton:hover {}
 
-div.headerButton:first-child {
-	border-left: none;
-	margin-left: 0px;
-	padding-left: 0px;
-}
+
 
 div.headerButton.selected,
 div.headerButton.selected:hover {
 	cursor: default;
-	text-decoration: underline;
+	border-color: #000;
+	border-bottom: 1px solid #fff;
 }
 
 div#outerSlider {
@@ -181,7 +177,8 @@ div#outerSlider>div {
 	position: relative;
 	float: left;
 	width: 700px;
-	height: 700px;
+	/* height: 700px; */
+	height: 100vh;
 	overflow: hidden;
 }
 
@@ -229,9 +226,9 @@ div#notifications {
 	position: absolute;
 	top: 20px;
 	left: 0px;
-	height: 700px;
+	height: 96vh;
 	width: 200px;
-	overflow: hidden;
+	overflow: auto;
 	font-size: 12px;
 }
 
@@ -420,7 +417,7 @@ div.button div.cooldown {
 }
 
 div.button div.tooltip {
-	width: 100px;
+	width: 110px;
 }
 
 /* Tooltip */
@@ -440,7 +437,7 @@ div.tooltip {
 }
 
 .tooltip.right {
-	left: 2px;
+	left: -1px;
 }
 
 .tooltip.left {

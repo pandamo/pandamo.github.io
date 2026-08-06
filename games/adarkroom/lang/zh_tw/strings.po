@@ -257,6 +257,62 @@ msgstr "github."
 msgid "Export / Import"
 msgstr "導出/導入"
 
+#: ../../script/engine.js
+msgid "save your game to the cloud, or restore it from the cloud."
+msgstr "將遊戲存檔儲存到雲端，或從雲端還原。"
+
+#: ../../script/engine.js
+msgid "you will get a 12-letter save key. it is the only way to restore, so keep it safe."
+msgstr "你將獲得一個 12 位字母的存檔密鑰，這是還原存檔的唯一憑證，請妥善保管。"
+
+#: ../../script/engine.js
+msgid "save to cloud"
+msgstr "儲存到雲端"
+
+#: ../../script/engine.js
+msgid "restore from cloud"
+msgstr "從雲端還原"
+
+#: ../../script/engine.js
+msgid "export / import code"
+msgstr "匯出/匯入代碼"
+
+#: ../../script/engine.js
+msgid "your save key (12 lowercase letters):"
+msgstr "你的存檔密鑰（12 位小寫字母）："
+
+#: ../../script/engine.js
+msgid "keep it safe. anyone with this key can restore your save."
+msgstr "請妥善保管。任何人取得此密鑰都能還原你的存檔。"
+
+#: ../../script/engine.js
+msgid "copy"
+msgstr "複製"
+
+#: ../../script/engine.js
+msgid "enter your 12-letter save key."
+msgstr "輸入你的 12 位存檔密鑰。"
+
+#: ../../script/engine.js
+msgid "restore"
+msgstr "還原"
+
+#: ../../script/engine.js
+msgid "the save key must be exactly 12 lowercase letters."
+msgstr "存檔密鑰必須是恰好 12 位小寫字母。"
+
+#: ../../script/engine.js
+msgid "error while saving to the cloud. please check your connection and try again."
+msgstr "儲存到雲端出錯，請檢查網路連線後重試。"
+
+#: ../../script/engine.js
+msgid "error while restoring. please check the key and your connection."
+msgstr "還原存檔出錯，請檢查密鑰與網路連線。"
+
+#: ../../script/engine.js
+msgid "retry"
+msgstr "重試"
+
 #: ../../script/engine.js:272
 msgid "export or import save data, for backing up"
 msgstr "導出或導入存檔文件，用於備份"
@@ -2543,6 +2599,10 @@ msgstr "做工粗糙的符咒"
 msgid "A Silent Forest"
 msgstr "靜謐森林"
 
+#: ../../script/path.js:29 ../../script/path.js:318
+msgid "A Dusty Path"
+msgstr "漫漫塵途"
+
 #: ../../script/outside.js:169
 msgid "gather wood"
 msgstr "伐木"
@@ -2634,6 +2694,10 @@ msgstr "羅盤指向:"
 #: ../../script/path.js:102
 msgid "perks:"
 msgstr "能力:"
+
+#: ../../script/path.js:104
+msgid "perks"
+msgstr "能力"
 
 #: ../../script/path.js:132
 msgid "none"

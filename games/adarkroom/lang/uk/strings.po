@@ -2564,6 +2564,10 @@ msgstr "аби-як зроблене намисто"
 msgid "A Silent Forest"
 msgstr "Тихий ліс"
 
+#: ../../script/path.js:29 ../../script/path.js:318
+msgid "A Dusty Path"
+msgstr "Пиляста стежка"
+
 #: ../../script/outside.js:169
 msgid "gather wood"
 msgstr "зібрати дрова"
